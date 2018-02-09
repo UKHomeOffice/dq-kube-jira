@@ -23,7 +23,7 @@ pipeline:
     environment:
       - KUBE_NAMESPACE=dq-management
       - INSECURE_SKIP_TLS_VERIFY=true
-      - JIRA_HOME_VOLUME_SIZE=5Gi
+      - JIRA_HOME_VOLUME_SIZE=25Gi
       - HOSTNAME=jira.dq.homeoffice.gov.uk
     commands:
       - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
