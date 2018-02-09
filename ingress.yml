@@ -18,6 +18,7 @@ spec:
           servicePort: https
         path: /
   tls:
-  - hosts:
+  - secretName: jira-tls
+    hosts:
     - {{ .HOSTNAME }}
     - www.{{ .HOSTNAME }}
