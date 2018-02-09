@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: jira
+  annotations:
+    volume.beta.kubernetes.io/storage-class: gp2-encrypted
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .JIRA_HOME_VOLUME_SIZE }}

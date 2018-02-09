@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: jira-service
+  name: jira-service
+spec:
+  ports:
+  - name: https
+    port: 443
+    targetPort: https
+  selector:
+    name: jira
