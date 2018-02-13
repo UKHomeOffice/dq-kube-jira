@@ -33,6 +33,9 @@ spec:
         - mountPath: /opt/atlassian/jira/conf
           subPath: config
           name: jira
+        - mountPath: /opt/atlassian/jira/logs
+          subPath: logs
+          name: jira
       - name: proxy
         image: quay.io/ukhomeofficedigital/nginx-proxy
         securityContext:
