@@ -33,5 +33,5 @@ pipeline:
       - PROD_KUBE_TOKEN
       - PROD_KUBE_SERVER
     when:
-      environment: prod
-      event: deployment
+      event: push
+      branch: master
