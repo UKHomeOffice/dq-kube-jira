@@ -15,7 +15,8 @@ pipeline:
       - NOTPROD_KUBE_TOKEN
       - NOTPROD_KUBE_SERVER
     when:
-      event: push
+      event: [push, tag, deployment]
+
 
 
   deploy_to_prod:
@@ -33,5 +34,5 @@ pipeline:
       - PROD_KUBE_TOKEN
       - PROD_KUBE_SERVER
     when:
-      event: push
-      branch: master
+      environment: production
+      event: deployment
