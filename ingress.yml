@@ -22,5 +22,5 @@ spec:
       paths:
       - backend:
           serviceName: jira-service
-          servicePort: 443
+          servicePort: https
         path: /
