@@ -12,5 +12,5 @@ overwritten with the version in this repository. To do this deploy the container
 and use `kubectl cp` to transfer the file on to the running container.
 
 ```
-kubectl cp jira-conf/server.xml <jira pod id>:/opt/atlassian/jira/conf/server.xml -c jira
+kubectl cp jira-conf/<env>/server.xml <jira pod id>:/opt/atlassian/jira/conf/server.xml -c jira
 ```
