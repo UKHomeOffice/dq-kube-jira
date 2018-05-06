@@ -26,16 +26,46 @@ spec:
           requests:
             cpu: 1.5
             memory: 2Gi
+        env:
+          - name: SERVER_PORT
+            value: '8080'
+          - name: SERVER_PROXY_NAME
+            value: {{ .HOSTNAME }}
+          - name: SERVER_PROXY_PORT
+            value: '443'
+          - name: SERVER_REDIRECT_PORT
+            value: '10443'
+          - name: DATABASE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: endpoint
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: database_name
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: password
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: port
+          - name: DATABASE_SCHEMA_NAME
+            value: {{ .DATABASE_SCHEMA_NAME }}
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: username
         volumeMounts:
           - mountPath: /var/atlassian/jira
             name: jira
-            subPath: home
-          - mountPath: /opt/atlassian/jira/conf
-            subPath: config
-            name: jira
-          - mountPath: /opt/atlassian/jira/logs
-            subPath: logs
-            name: jira
+
 
       - name: proxy
         image: quay.io/ukhomeofficedigital/nginx-proxy
