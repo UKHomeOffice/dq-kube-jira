@@ -27,7 +27,7 @@ pipeline:
       - KUBE_NAMESPACE=dq-management
       - INSECURE_SKIP_TLS_VERIFY=true
       - JIRA_HOME_VOLUME_SIZE=25Gi
-      - HOSTNAME=jira.prod.dq.homeoffice.gov.uk
+      - HOSTNAME=jira.dq.homeoffice.gov.uk
       - DATABASE_SECRET_NAME=dq-management-jira-rds-access
       - DATABASE_SCHEMA_NAME=public
     commands:
