@@ -22,21 +22,22 @@ CREATE DATABASE <database name> WITH ENCODING 'UNICODE' LC_COLLATE 'C' LC_CTYPE 
 GRANT ALL PRIVILEGES ON DATABASE <database name> TO <role name>;
 ```
 
-### 2. Set the server's connection settings to work with the proxy
+### 2. Set the server's environment variables in Drone secrets
 
-To get JIRA to work correctly with the proxy, the `server.xml` file needs to be
-overwritten with the version in this repository. To do this deploy the container
-and use `kubectl cp` to transfer the file on to the running container.
+The image requires the following environment variables to be set as part of the deployment as they are used to set the server's proxy and database connections at runtime.
 
-```
-kubectl cp jira-conf/<env>/server.xml <jira pod id>:/opt/atlassian/jira/conf/server.xml -c jira
-```
-
-Restart the JIRA docker container to make JIRA pick up the new configuration:
-
-```
-kubectl delete pod <jira pod id>
-```
+Environment variable | Description | Example
+-------------------- | ----------- | -------
+SERVER_PORT          | The port that the JIRA container is listening on | 8080
+SERVER_REDIRECT_PORT | The port that the proxy container is listening on | 10443
+SERVER_PROXY_NAME    | The host name of the proxy | jira.example.com
+SERVER_PROXY_PORT    | The external port on the proxy | 443
+DATABASE_HOST        | Database server host name  | db.example.com
+DATABASE_PORT        | Database server port | 5432
+DATABASE_NAME        | Database name | jiradb
+DATABASE_USERNAME    | Database username | jira
+DATABASE_PASSWORD    | Database user's password | supersecret
+DATABASE_SCHEMA_NAME | Database schema name | public
 
 ### 3. Set up JIRA
 

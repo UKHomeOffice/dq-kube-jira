@@ -39,4 +39,5 @@ pipeline:
       - PROD_KUBE_SERVER
     when:
       environment: production
+      branch: master
       event: deployment
