@@ -62,6 +62,21 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: username
+          - name: BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .AWS_BUCKET_SECRET_NAME }}
+                key: bucket_name
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .AWS_BUCKET_SECRET_NAME }}
+                key: access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .AWS_BUCKET_SECRET_NAME }}
+                key: secret_access_key
         volumeMounts:
           - mountPath: /var/atlassian/jira
             name: jira

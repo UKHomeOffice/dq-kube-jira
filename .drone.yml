@@ -8,6 +8,7 @@ pipeline:
       - JIRA_HOME_VOLUME_SIZE=5Gi
       - HOSTNAME=jira.notprod.dq.homeoffice.gov.uk
       - DATABASE_SECRET_NAME=dq-jira-notprod-rds-access
+      - AWS_BUCKET_SECRET_NAME=s3-dq-notprod-management-jira-backup
       - DATABASE_SCHEMA_NAME=public
     commands:
       - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
@@ -29,6 +30,7 @@ pipeline:
       - JIRA_HOME_VOLUME_SIZE=25Gi
       - HOSTNAME=jira.dq.homeoffice.gov.uk
       - DATABASE_SECRET_NAME=dq-management-jira-rds-access
+      - AWS_BUCKET_SECRET_NAME=s3-dq-management-jira-backup
       - DATABASE_SCHEMA_NAME=public
     commands:
       - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
