@@ -13,10 +13,16 @@ pipeline:
     commands:
       - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
       - export KUBE_SERVER=$$NOTPROD_KUBE_SERVER
+      - export BUCKET_NAME=$$NOTPROD_BUCKET_NAME
+      - export ACCESS_KEY_ID=$$NOTPROD_ACCESS_KEY_ID
+      - export SECRET_ACCESS_KEY=$$NOTPRO_SECRET_ACCESS_KEY
       - kd -f network-policy.yml -f pvc.yml -f deployment.yml -f service.yml -f ingress.yml
     secrets:
       - NOTPROD_KUBE_TOKEN
       - NOTPROD_KUBE_SERVER
+      - NOTPROD_BUCKET_NAME
+      - NOTPROD_ACCESS_KEY_ID
+      - NOTPROD_SECRET_ACCESS_KEY
     when:
       event: [push, tag, deployment]
 
@@ -35,10 +41,16 @@ pipeline:
     commands:
       - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
       - export KUBE_SERVER=$$PROD_KUBE_SERVER
+      - export BUCKET_NAME=$$PROD_BUCKET_NAME
+      - export ACCESS_KEY_ID=$$PROD_ACCESS_KEY_ID
+      - export SECRET_ACCESS_KEY=$$PRO_SECRET_ACCESS_KEY
       - kd -f network-policy.yml -f pvc.yml -f deployment.yml -f service.yml -f ingress.yml
     secrets:
       - PROD_KUBE_TOKEN
       - PROD_KUBE_SERVER
+      - PROD_BUCKET_NAME
+      - PROD_ACCESS_KEY_ID
+      - PROD_SECRET_ACCESS_KEY
     when:
       environment: production
       branch: master
