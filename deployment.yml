@@ -62,21 +62,6 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: username
-          - name: BUCKET_NAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .AWS_BUCKET_SECRET_NAME }}
-                key: bucket_name
-          - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: {{ .AWS_BUCKET_SECRET_NAME }}
-                key: access_key_id
-          - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ .AWS_BUCKET_SECRET_NAME }}
-                key: secret_access_key
         volumeMounts:
           - mountPath: /var/atlassian/jira
             name: jira
@@ -99,18 +84,59 @@ spec:
           - name: https
             containerPort: 10443
 
-      - name: test
-        image: quay.io/ukhomeofficedigital/nginx-proxy
+      - name: s3-backup
+        image: quay.io/ukhomeofficedigital/dq-jira-s3-backup
+        imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
         env:
-          - name: PROXY_SERVICE_HOST
-            value: 'http://127.0.0.1'
-          - name: PROXY_SERVICE_PORT
-            value: '8081'
+          - name: DATABASE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: endpoint
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: database_name
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: password
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: port
+          - name: DATABASE_SCHEMA_NAME
+            value: {{ .DATABASE_SCHEMA_NAME }}
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: username
+          - name: BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .AWS_BUCKET_SECRET_NAME }}
+                key: bucket_name
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .AWS_BUCKET_SECRET_NAME }}
+                key: access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .AWS_BUCKET_SECRET_NAME }}
+                key: secret_access_key
         volumeMounts:
           - mountPath: /var/atlassian/jira
             name: jira
+
+
 
       volumes:
         - name: jira
