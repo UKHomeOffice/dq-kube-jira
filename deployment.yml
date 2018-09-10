@@ -99,7 +99,15 @@ spec:
           - name: https
             containerPort: 10443
 
-      volumes:
+      - name: test
+        image: quay.io/ukhomeofficedigital/nginx-proxy
+        securityContext:
+          runAsNonRoot: true
+        volumeMounts:
+          - mountPath: /var/atlassian/jira
+            name: jira
+
+        volumes:
         - name: jira
           persistentVolumeClaim:
             claimName: jira
