@@ -103,6 +103,11 @@ spec:
         image: quay.io/ukhomeofficedigital/nginx-proxy
         securityContext:
           runAsNonRoot: true
+        env:
+          - name: PROXY_SERVICE_HOST
+            value: 'http://127.0.0.1'
+          - name: PROXY_SERVICE_PORT
+            value: '8080'
         volumeMounts:
           - mountPath: /var/atlassian/jira
             name: jira
