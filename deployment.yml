@@ -100,7 +100,7 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: database_name
-          - name: DATABASE_PASSWORD
+          - name: PGPASSWD
             valueFrom:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
