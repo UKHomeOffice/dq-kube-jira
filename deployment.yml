@@ -5,6 +5,7 @@ metadata:
   name: jira
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   template:
     metadata:
       labels:
