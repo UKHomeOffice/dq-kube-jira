@@ -1,17 +1,15 @@
 # Deploying JIRA in Docker on ACP
 
-## Initial deployment
-
 This project is expected to be used to deploy in the UK Home Office ACP and
 therefore depends on certain features present in the platform.
 
 ## Introduction
 
-This deployment will create 3 containers:-
+This deployment will create 3 containers in Kubernetes:-
 
 * jira - To run the Atlassian JIRA product
 * nginx - To act as a reverse proxy that sits in front of JIRA
-* s3-backup - To backup JIRA & its database and push the backups to S3.
+* s3-backup - To backup JIRA & its database and push the backups to S3
 
 ### Environment variables
 The [UKHomeOffice/jira-docker](https://github.com/UKHomeOffice/jira-docker) image requires the following environment variables to be set as part of the deployment as they are used to set the server's proxy and database connections at runtime.
@@ -29,7 +27,7 @@ DATABASE_USERNAME    | Database username | jira
 DATABASE_PASSWORD    | Database user's password | supersecret
 DATABASE_SCHEMA_NAME | Database schema name | public
 
-The [UKHomeOffice/dq-jira-s3-backup](https://github.com/UKHomeOffice/dq-jira-s3-backup) container (which is on by default in this repo) to backup JIRA to S3, the following environment variables will also need to be set:-
+The [UKHomeOffice/dq-jira-s3-backup](https://github.com/UKHomeOffice/dq-jira-s3-backup) container (which is on by default in this repo) to backup JIRA to S3, the following environment variables will also need to be set.
 
 Environment variable  | Description | Example
 --------------------- | ----------- | -------
@@ -45,15 +43,15 @@ This deployment includes the [dq-jira-s3-backup](https://github.com/UKHomeOffice
 
 This deployment also provides a Kube volumeMount to both the JIRA and s3-bcakup containers which is required for the s3-backup image to work.
 
-## Running JIRA for the 1st time
+## Initial deployment
 
-If this is the first time starting JIRA (fresh install) then follow the steps below
+If this is the first time starting JIRA (fresh install) then follow the steps below.
 
 ### 1. Set up the database
 
-JIRA will not create a database for itself, so it must exist before running the online setup. So, JIRA requires that a database and a user are created that have the required permissions.
+JIRA will not create a database for itself - it requires that a database and a user are created that have the correct permissions before it will start.
 
-The below example shows how to create a database when using PostgreSQL:-
+The below example shows how to create a database when using PostgreSQL.
 
 * Connect to the database server
 
@@ -68,11 +66,11 @@ CREATE DATABASE <database name> WITH ENCODING 'UNICODE' LC_COLLATE 'C' LC_CTYPE 
 GRANT ALL PRIVILEGES ON DATABASE <database name> TO <role name>;
 ```
 
-Customise the database creation for whichever database server/service you are using, but be sure to set the correct values in the `DATABASE_*` environmental variables.
+Customise the database creation for whichever database you are using, but be sure to set the correct values in the `DATABASE_*` environment variables.
 
 ### 2. Set the environment variables in Drone secrets
 
-Using the [environmental variables](### Environment variables) section above, create the required environment variables as Drone secrets ready for deployment.
+Using the environment variables section above, create the required environment variables as Drone secrets ready for deployment.
 
 Note that there are two sets of variables, one for JIRA itself and another for the s3-backups.
 
@@ -82,4 +80,4 @@ Now that the database and the environment variables are set up, it's time to dep
 
 ### 4. Set up JIRA
 
-You will need to use the online setup tool to complete the installation of Jira. This should only need to be run once.
+Once started successfully you will need to use the online setup tool to complete the installation of Jira. This should only need to be run once.
