@@ -20,6 +20,10 @@ RUN set -x \
 RUN apt-get install -y python-pip \
     && pip install awscli --upgrade
 
+# Echo ENV VARS for testing
+RUN echo $JIRA_INSTALL
+RUN echo $JIRA_VERSION
+
 # Install Atlassian JIRA and helper tools
 RUN mkdir -p ${JIRA_INSTALL}
 RUN wget -q -O - https://product-downloads.atlassian.com/software/jira/downloads/atlassian-jira-software-${JIRA_VERSION}.tar.gz | tar xz --strip=1 -C ${JIRA_INSTALL} || \
