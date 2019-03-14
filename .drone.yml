@@ -1,5 +1,4 @@
 pipeline:
-
   build_jira:
     image: ukhomeoffice/drone-docker
     repo: quay.io/ukhomeofficedigital/jira-docker
@@ -14,12 +13,6 @@ pipeline:
       - ${JIRA_VERSION}
     when:
       event: push
-
-  matrix:
-    JIRA_VERSION:
-      - 7.12.0
-      - 7.13.0
-      - 8.0.0
 
   build_jira_backup:
     image: ukhomeoffice/drone-docker
@@ -84,3 +77,9 @@ pipeline:
       environment: production
       branch: master
       event: deployment
+
+matrix:
+  JIRA_VERSION:
+  - 7.12.0
+  - 7.13.0
+  - 8.0.0
