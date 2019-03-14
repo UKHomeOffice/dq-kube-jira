@@ -1,3 +1,7 @@
+matrix:
+  JIRA_VERSION:
+    - 8.0.0
+
 pipeline:
   build_jira:
     image: ukhomeoffice/drone-docker
@@ -7,8 +11,6 @@ pipeline:
     context: app/jira-docker
     dockerfile: app/jira-docker/Dockerfile
     force_tag: true
-    environment:
-      - JIRA_VERSION=8.0.0
     build_args:
       - JIRA_VERSION=${JIRA_VERSION}
     tags:
