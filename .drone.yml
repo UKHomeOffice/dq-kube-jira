@@ -1,5 +1,36 @@
 pipeline:
 
+  build_jira:
+    image: ukhomeoffice/drone-docker
+    repo: quay.io/ukhomeofficedigital/jira-docker
+    secrets: [ docker_username, docker_password ]
+    registry: quay.io
+    context: app/jira-docker
+    dockerfile: app/jira-docker/Dockerfile
+    force_tag: true
+    build_args:
+      - JIRA_VERSION=${JIRA_VERSION}
+    tags:
+      - ${JIRA_VERSION}
+    when:
+      event: push
+
+  matrix:
+    JIRA_VERSION:
+      - 7.12.0
+      - 7.13.0
+      - 8.0.0
+
+  build_jira_backup:
+    image: ukhomeoffice/drone-docker
+    repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
+    secrets: [ docker_username, docker_password ]
+    registry: quay.io
+    context: app/jira-s3-backup
+    dockerfile: app/jira-s3-backup/Dockerfile
+    when:
+      event: push
+
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd
     environment:
