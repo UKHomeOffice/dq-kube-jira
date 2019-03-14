@@ -57,8 +57,6 @@ pipeline:
     when:
       event: [push, tag, deployment]
 
-
-
   deploy_to_prod:
     image: quay.io/ukhomeofficedigital/kd
     environment:
