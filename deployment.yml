@@ -16,7 +16,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: jira
-        image: quay.io/ukhomeofficedigital/jira-docker:${JIRA_VERSION}
+        image: quay.io/ukhomeofficedigital/jira-docker:8.0.0
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true

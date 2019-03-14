@@ -38,7 +38,6 @@ pipeline:
       - DATABASE_SECRET_NAME=dq-jira-notprod-rds-access
       - AWS_BUCKET_SECRET_NAME=s3-dq-notprod-management-jira-backup
       - DATABASE_SCHEMA_NAME=public
-      - JIRA_VERSION=${JIRA_VERSION}
     commands:
       - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
       - export KUBE_SERVER=$$NOTPROD_KUBE_SERVER
@@ -65,7 +64,6 @@ pipeline:
       - DATABASE_SECRET_NAME=dq-management-jira-rds-access
       - AWS_BUCKET_SECRET_NAME=s3-dq-management-jira-backup
       - DATABASE_SCHEMA_NAME=public
-      - JIRA_VERSION=${JIRA_VERSION}
     commands:
       - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
       - export KUBE_SERVER=$$PROD_KUBE_SERVER
