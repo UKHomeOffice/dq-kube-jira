@@ -15,8 +15,6 @@ pipeline:
       event: push
     matrix:
       JIRA_VERSION:
-      - 7.12.0
-      - 7.13.0
       - 8.0.0
 
   build_jira_backup:
