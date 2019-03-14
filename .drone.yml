@@ -1,13 +1,14 @@
 pipeline:
   build_jira:
     image: ukhomeoffice/drone-docker
-    environment: JIRA_VERSION=8.0.0
     repo: quay.io/ukhomeofficedigital/jira-docker
     secrets: [ docker_username, docker_password ]
     registry: quay.io
     context: app/jira-docker
     dockerfile: app/jira-docker/Dockerfile
     force_tag: true
+    environment:
+      - JIRA_VERSION=8.0.0
     build_args:
       - JIRA_VERSION=${JIRA_VERSION}
     tags:
