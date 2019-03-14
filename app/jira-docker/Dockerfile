@@ -64,6 +64,7 @@ WORKDIR /var/atlassian/jira
 COPY --chown=jira:jira "assets/jira_home/dbconfig.xml" "/home/jira/templates/"
 COPY --chown=jira:jira "assets/jira_install/conf/server.xml" "/home/jira/templates/"
 COPY "docker-entrypoint.sh" "/"
+RUN chmod +x /docker-entrypoint.sh
 
 USER ${USERMAP_UID}
 
