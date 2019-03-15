@@ -1,10 +1,10 @@
 # DQ Kube JIRA
 
-## Introduction
+## Introduction
 
 This repo contains a kubernetes deployment for the DQ teams JIRA install, as well as the files required to create the JIRA docker container (jira-docker) and a backup container (jira-s3-backup) which backs up JIRA to AWS S3.
 
-## Layout
+## Layout
 
 Originally, the JIRA docker container and the backup container were built in separate repos. They have been combined into this repo, so that all of the files necessary to build and deploy DQ's JIRA install are available in one place.
 
