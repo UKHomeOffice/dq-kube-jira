@@ -1,83 +1,56 @@
-# Deploying JIRA in Docker on ACP
+# DQ Kube JIRA
 
-This project is expected to be used to deploy in the UK Home Office ACP and
-therefore depends on certain features present in the platform.
+## Introduction
 
-## Introduction
+This repo contains a kubernetes deployment for the DQ teams JIRA install, as well as the files required to create the JIRA docker container (jira-docker) and a backup container (jira-s3-backup) which backs up JIRA to AWS S3.
 
-This deployment will create 3 containers in Kubernetes:-
+## Layout
 
-* jira - To run the Atlassian JIRA product
-* nginx - To act as a reverse proxy that sits in front of JIRA
-* s3-backup - To backup JIRA & its database and push the backups to S3
+Originally, the JIRA docker container and the backup container were built in separate repos. They have been combined into this repo, so that all of the files necessary to build and deploy DQ's JIRA install are available in one place.
 
-### Environment variables
-The [UKHomeOffice/jira-docker](https://github.com/UKHomeOffice/jira-docker) image requires the following environment variables to be set as part of the deployment as they are used to set the server's proxy and database connections at runtime.
-
-Environment variable | Description | Example
--------------------- | ----------- | -------
-SERVER_PORT          | The port that the JIRA container is listening on | 8080
-SERVER_REDIRECT_PORT | The port that the proxy container is listening on | 10443
-SERVER_PROXY_NAME    | The host name of the proxy | jira.example.com
-SERVER_PROXY_PORT    | The external port on the proxy | 443
-DATABASE_HOST        | Database server host name  | db.example.com
-DATABASE_PORT        | Database server port | 5432
-DATABASE_NAME        | Database name | jiradb
-DATABASE_USERNAME    | Database username | jira
-DATABASE_PASSWORD    | Database user's password | supersecret
-DATABASE_SCHEMA_NAME | Database schema name | public
-
-The [UKHomeOffice/dq-jira-s3-backup](https://github.com/UKHomeOffice/dq-jira-s3-backup) container (which is on by default in this repo) to backup JIRA to S3, the following environment variables will also need to be set.
-
-Environment variable  | Description | Example
---------------------- | ----------- | -------
-BUCKET_NAME           | The S3 bucket to use for the backups | backup-bucket
-AWS_ACCESS_KEY_ID     | The AWS key used to authenticate with the bucket | my_aws_key
-AWS_SECRET_ACCESS_KEY | The secret key used to authenticate with the BUCKET_NAME | my_aws_secret_key
-
-It is important to note that the [dq-jira-s3-backup](https://github.com/UKHomeOffice/dq-jira-s3-backup) image also requires `PGPASSWORD` to be set as an environment variable. In this deployment `DATABASE_PASSWORD` is presented to the container as `PGPASSWORD` using the same Kube secret so there is no need to set `PGPASSWORD` separately.
-
-### Backing up data to S3
-
-This deployment includes the [dq-jira-s3-backup](https://github.com/UKHomeOffice/dq-jira-s3-backup) container which takes periodic backups of JIRA and its database (PostgreSQL) and stores these in S3.
-
-This deployment also provides a Kube volumeMount to both the JIRA and s3-bcakup containers which is required for the s3-backup image to work.
-
-## Initial deployment
-
-If this is the first time starting JIRA (fresh install) then follow the steps below.
-
-### 1. Set up the database
-
-JIRA will not create a database for itself - it requires that a database and a user are created that have the correct permissions before it will start.
-
-The below example shows how to create a database when using PostgreSQL.
-
-* Connect to the database server
+This repo contains the following:
 
 ```
-psql -h $DBHOST -p $DBPORT -U $DBUSER $DBNAME
+dq-kube-jira
+├── LICENSE
+├── README.md
+├── app
+│   ├── jira-docker
+│   │   ├── Dockerfile
+│   │   ├── assets
+│   │   │   ├── jira_home
+│   │   │   │   └── dbconfig.xml
+│   │   │   └── jira_install
+│   │   │       └── conf
+│   │   │           └── server.xml
+│   │   └── docker-entrypoint.sh
+│   └── jira-s3-backup
+│       ├── Dockerfile
+│       ├── s3-backup.config.js
+│       ├── s3-backup.sh
+│       └── scripts
+│           └── s3-backup.sh
+├── deployment.yml
+├── ingress.yml
+├── jira-docker.md
+├── jira-kube.md
+├── jira-s3-backup.md
+├── network-policy.yml
+├── pvc.yml
+├── secrets.yml
+└── service.yml
 ```
 
-* Run the following two commands to create the database and grant the JIRA service user the required privileges:
+As seen above, the JIRA docker container and backup container are built in their respective `app/` directories.
 
-```
-CREATE DATABASE <database name> WITH ENCODING 'UNICODE' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;
-GRANT ALL PRIVILEGES ON DATABASE <database name> TO <role name>;
-```
+## Changing the JIRA version to deploy
 
-Customise the database creation for whichever database you are using, but be sure to set the correct values in the `DATABASE_*` environment variables.
+The version of JIRA that is built and deployed can be easily changed by editing the [.drone.yml](./.drone.yml) file, changing the value of `JIRA_VERSION` inside the `matrix` block at the top of the file.
 
-### 2. Set the environment variables in Drone secrets
+## Documentation
 
-Using the environment variables section above, create the required environment variables as Drone secrets ready for deployment.
+Each part of the deployment (kube, jira-docker, jira-s3-backup) is documented with separate READMEs. These can be found at the following locations in the root of the repo:
 
-Note that there are two sets of variables, one for JIRA itself and another for the s3-backups.
-
-### 3. Deploy
-
-Now that the database and the environment variables are set up, it's time to deploy.
-
-### 4. Set up JIRA
-
-Once started successfully you will need to use the online setup tool to complete the installation of Jira. This should only need to be run once.
+[JIRA docker container README](./jira-docker.md)</br>
+[JIRA to s3 backup container README](./jira-s3-backup.md)</br>
+[JIRA kube deployment README](./jira-kube.md)
