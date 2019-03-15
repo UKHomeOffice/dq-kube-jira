@@ -58,6 +58,7 @@ pipeline:
   deploy_to_prod:
     image: quay.io/ukhomeofficedigital/kd
     environment:
+      - JIRA_VERSION=${JIRA_VERSION}
       - KUBE_NAMESPACE=dq-management
       - INSECURE_SKIP_TLS_VERIFY=true
       - JIRA_HOME_VOLUME_SIZE=25Gi
