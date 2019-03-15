@@ -39,6 +39,7 @@ pipeline:
       - AWS_BUCKET_SECRET_NAME=s3-dq-notprod-management-jira-backup
       - DATABASE_SCHEMA_NAME=public
     commands:
+      - export JIRA_VERSION=${JIRA_VERSION}
       - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
       - export KUBE_SERVER=$$NOTPROD_KUBE_SERVER
       - export BUCKET_NAME=$$NOTPROD_BUCKET_NAME
