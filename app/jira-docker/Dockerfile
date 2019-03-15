@@ -2,7 +2,7 @@ FROM openjdk:8
 
 LABEL maintainer="dqdevops@homeoffice.gsi.gov.uk"
 
-ARG JIRA_VERSION=8.0.0
+ARG JIRA_VERSION=${JIRA_VERSION}
 
 ENV JIRA_HOME     /var/atlassian/jira
 ENV JIRA_INSTALL  /opt/atlassian/jira
