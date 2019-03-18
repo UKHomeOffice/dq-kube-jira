@@ -13,7 +13,7 @@ RUN set -x \
 #    && apt-get install --quiet --yes --no-install-recommends xmlstarlet apt-utils \
 #    && apt-get clean \
 	&& apk update --quiet \
-	&& apk add --quiet xmlstarlet apk-tools \
+	&& apk add --quiet xmlstarlet apk-tools curl \
     && adduser --disabled-password --gecos "" --uid ${USERMAP_UID} jira \
     && chown jira:jira -R /var \
     && chown jira:jira -R /opt
