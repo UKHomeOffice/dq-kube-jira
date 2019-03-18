@@ -1,14 +1,15 @@
-FROM python:2.7
+FROM quay.io/ukhomeofficedigital/centos-base:v0.5.12
 
 LABEL maintainer="dqdevops@homeoffice.gsi.gov.uk"
 
 ENV USERMAP_UID 1000
 
-RUN apt-get update --quiet \
-    && apt-get upgrade -y \
-    && apt-get install -y curl \
-    && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-    && apt-get install -y nodejs \
+RUN yum update -y \
+    && yum upgrade -y \
+    && yum install -y epel-release \
+    && yum install -y python-pip \
+    && curl -sL https://rpm.nodesource.com/setup_11.x | bash - \
+    && yum install -y nodejs \
     && npm install -g pm2
 
 RUN groupadd -r s3user && \
@@ -32,7 +33,7 @@ COPY ./s3-backup.config.js /s3-backup.config.js
 RUN pip install awscli --upgrade
 
 # Add postgresql-client
-RUN apt-get install --quiet --yes postgresql-client
+RUN yum install -y postgresql
 
 # Change user to s3user
 USER ${USERMAP_UID}
