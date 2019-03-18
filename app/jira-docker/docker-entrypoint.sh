@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 cp /home/jira/templates/dbconfig.xml ${JIRA_HOME}/dbconfig.xml
 cp /home/jira/templates/server.xml ${JIRA_INSTALL}/conf/server.xml
@@ -12,7 +12,7 @@ if  [ -z "${SERVER_PORT// }" ]; then
 	exit 1
 else
 	sed 's/{{SERVER_PORT}}/'"${SERVER_PORT}"'/' -i ${JIRA_INSTALL}/conf/server.xml
-fi 
+fi
 
 if [ -z "${SERVER_REDIRECT_PORT// }" ]; then
 	echo "SERVER_REDIRECT_PORT is not defined!!! See README.md for more info."
@@ -33,7 +33,7 @@ if [ -z "${SERVER_PROXY_PORT// }" ]; then
 	exit 1
 else
 	sed 's/{{SERVER_PROXY_PORT}}/'"${SERVER_PROXY_PORT}"'/' -i ${JIRA_INSTALL}/conf/server.xml
-fi		
+fi
 
 # update the dbconfig.xml settings from environment variables
 
