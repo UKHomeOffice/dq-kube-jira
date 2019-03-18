@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
 cp /home/jira/templates/dbconfig.xml ${JIRA_HOME}/dbconfig.xml
 cp /home/jira/templates/server.xml ${JIRA_INSTALL}/conf/server.xml

@@ -10,7 +10,7 @@ ENV USERMAP_UID 1000
 
 RUN set -x \
     && apk update --quiet \
-    && apk add --quiet xmlstarlet apk-tools curl \
+    && apk add --quiet xmlstarlet apk-tools curl bash \
     && adduser --disabled-password --gecos "" --uid ${USERMAP_UID} jira \
     && chown jira:jira -R /var \
     && chown jira:jira -R /opt
