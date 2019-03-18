@@ -17,7 +17,7 @@ RUN set -x \
 
 # Add aws-cli tools
 RUN apk add py-pip \
-    && pip intsall --upgrade pip
+    && pip intsall --upgrade pip \
     && pip install awscli
 
 # Install Atlassian JIRA and helper tools
