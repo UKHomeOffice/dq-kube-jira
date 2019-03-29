@@ -8,7 +8,7 @@ RUN yum update -y \
     && yum upgrade -y \
     && yum install -y epel-release \
     && yum install -y python-pip \
-    && curl -sL https://rpm.nodesource.com/setup_11.x | bash - \
+    && curl -sL https://raw.githubusercontent.com/nodesource/distributions/master/rpm/setup_11.x -o setup_11.x && bash setup_11.x && rm setup_11.x \
     && yum install -y nodejs \
     && npm install -g pm2
 
