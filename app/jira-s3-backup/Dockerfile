@@ -1,6 +1,6 @@
-FROM quay.io/ukhomeofficedigital/centos-base:v0.5.12
+FROM quay.io/ukhomeofficedigital/centos-base:v0.5.14.1
 
-LABEL maintainer="dqdevops@homeoffice.gsi.gov.uk"
+LABEL maintainer="dqdevops@digital.homeoffice.gov.uk"
 
 ENV USERMAP_UID 1000
 
@@ -10,7 +10,8 @@ RUN yum update -y \
     && yum install -y python-pip \
     && curl -sL https://raw.githubusercontent.com/nodesource/distributions/master/rpm/setup_11.x -o setup_11.x && bash setup_11.x && rm setup_11.x \
     && yum install -y nodejs \
-    && npm install -g pm2
+    && npm install -g pm2 \
+    && pip install --upgrade pip
 
 RUN groupadd -r s3user && \
 useradd -u $USERMAP_UID -r -g s3user s3user && \
@@ -33,7 +34,8 @@ COPY ./s3-backup.config.js /s3-backup.config.js
 RUN pip install awscli --upgrade
 
 # Add postgresql-client
-RUN yum install -y postgresql
+RUN rpm -ivh https://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-3.noarch.rpm
+RUN yum install -y postgresql95
 
 # Change user to s3user
 USER ${USERMAP_UID}
