@@ -37,7 +37,7 @@ pipeline:
       - JIRA_VERSION=${JIRA_VERSION}
       - KUBE_NAMESPACE=dq-management-notprod
       - INSECURE_SKIP_TLS_VERIFY=true
-      - JIRA_HOME_VOLUME_SIZE=5Gi
+      - JIRA_HOME_VOLUME_SIZE=10Gi
       - HOSTNAME=jira.notprod.dq.homeoffice.gov.uk
       - DATABASE_SECRET_NAME=dq-jira-notprod-rds-access
       - AWS_BUCKET_SECRET_NAME=s3-dq-notprod-management-jira-backup
