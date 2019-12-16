@@ -30,11 +30,11 @@ find "/backup/jira-db/" -type d -mtime +2 -exec rm -rf {} \;
 
 # Copy to S3 bucket
 echo "Copying data directory to S3"
-/usr/local/bin/aws s3 cp --recursive --quiet /backup/jira/ s3://$BUCKET_NAME/jira-backup/data/ || echo "FAILED!"
+/usr/bin/aws s3 cp --recursive --quiet /backup/jira/ s3://$BUCKET_NAME/jira-backup/data/ || echo "FAILED!"
 echo "Copying database backup to S3"
-/usr/local/bin/aws s3 cp --recursive --quiet /backup/jira-db/ s3://$BUCKET_NAME/jira-backup/jira-db/ || echo "FAILED!"
+/usr/bin/aws s3 cp --recursive --quiet /backup/jira-db/ s3://$BUCKET_NAME/jira-backup/jira-db/ || echo "FAILED!"
 echo "Copying export directory to S3"
-/usr/local/bin/aws s3 cp --recursive --quiet /var/atlassian/jira/export/ s3://$BUCKET_NAME/jira-backup/export/ || echo "FAILED!"
+/usr/bin/aws s3 cp --recursive --quiet /var/atlassian/jira/export/ s3://$BUCKET_NAME/jira-backup/export/ || echo "FAILED!"
 
 echo "Backups finished"
     # Sleep for an hour
