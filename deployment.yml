@@ -88,7 +88,7 @@ spec:
             containerPort: 10443
 
       - name: s3-backup
-        image: quay.io/ukhomeofficedigital/dq-jira-s3-backup:b{{ .DRONE_BUILD_NUMBER }}
+        image: quay.io/ukhomeofficedigital/dq-jira-s3-backup:{{ .DRONE_COMMIT_SHA }}
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
@@ -138,8 +138,6 @@ spec:
         volumeMounts:
           - mountPath: /var/atlassian/jira
             name: jira
-
-
 
       volumes:
         - name: jira
