@@ -27,6 +27,7 @@ pipeline:
     context: app/jira-s3-backup
     dockerfile: app/jira-s3-backup/Dockerfile
     tags:
+      - ${DRONE_COMMIT_SHA}
       - b${DRONE_BUILD_NUMBER}
     when:
       event: push
