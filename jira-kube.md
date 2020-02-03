@@ -34,6 +34,7 @@ Environment variable  | Description | Example
 BUCKET_NAME           | The S3 bucket to use for the backups | backup-bucket
 AWS_ACCESS_KEY_ID     | The AWS key used to authenticate with the bucket | my_aws_key
 AWS_SECRET_ACCESS_KEY | The secret key used to authenticate with the BUCKET_NAME | my_aws_secret_key
+SLACK_WEBHOOK         | Slack Webhook URL | slack_webhook
 
 It is important to note that the [dq-jira-s3-backup](https://github.com/UKHomeOffice/dq-jira-s3-backup) image also requires `PGPASSWORD` to be set as an environment variable. In this deployment `DATABASE_PASSWORD` is presented to the container as `PGPASSWORD` using the same Kube secret so there is no need to set `PGPASSWORD` separately.
 

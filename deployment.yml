@@ -135,6 +135,11 @@ spec:
               secretKeyRef:
                 name: {{ .AWS_BUCKET_SECRET_NAME }}
                 key: secret_access_key
+          - name: SLACK_WEBHOOK
+            valueFrom:
+              secretKeyRef:
+                name: {{ .SLACK_WEBHOOK }}
+                key: slack_webhook
         volumeMounts:
           - mountPath: /var/atlassian/jira
             name: jira

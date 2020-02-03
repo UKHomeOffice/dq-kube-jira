@@ -14,7 +14,8 @@ module.exports = {
     	  DATABASE_USERNAME: process.argv[10],
     	  BUCKET_NAME: process.argv[11],
     	  AWS_ACCESS_KEY_ID: process.argv[12],
-    	  AWS_SECRET_ACCESS_KEY: process.argv[13]
+    	  AWS_SECRET_ACCESS_KEY: process.argv[13],
+        SLACK_WEBHOOK: process.argv[14]
     	}
     }
   ]
