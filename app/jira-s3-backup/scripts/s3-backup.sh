@@ -2,46 +2,102 @@
 
 set -e
 
-# Set current time
-export CURRENT=$(date +%k)
+send_msg_to_slack() {
+	post='
+	{
+			"text": ":fire: :sad_parrot: An error has occurred in Jira backup script :sad_parrot: :fire:",
+			"attachments": [
+				{
+						"text": "'"${1}"'",
+						"color": "#B22222",
+						"attachment_type": "default",
+						"fields": [
+								{
+										"title": "Priority",
+										"value": "High",
+										"short": "false"
+								}
+						],
+						"footer": "Kubernetes API",
+						"footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
+				}
+		]
+	}'
 
-if [ $CURRENT = $START_HOUR_1 -o $CURRENT = $START_HOUR_2 ]; then
+	echo $post | curl -X POST $SLACK_WEBHOOK -H 'Content-type: application/json' --data @-
+	echo "slack message sent"
+}
 
-# Set variables for date and time - used for folder structure
-export BACKUP_DAY=$(date +%Y-%b-%d)
-export BACKUP_TIME=$(date +%Y-%b-%d-%H%M)
+log_error() {
+	echo "Error! ${1}"
+	send_msg_to_slack "${1}"
+	exit 1
+}
 
-echo "Backups starting..."
+backup_data_dir() {
+	# Create a backup of the attachment and avatar directories in JIRA_HOME/data
+	echo "Backing up data directory"
+	mkdir -p /backup/jira/${BACKUP_DAY}/ || log_error "Failed to create backup data directory"
+	if ! tar -czf /backup/jira/${BACKUP_DAY}/${BACKUP_TIME}-jira.tar.gz /var/atlassian/jira/data 2> "$ERROR_LOG"; then
+		log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
+	fi
 
-# Create a backup of the attachment and avatar directories in JIRA_HOME/data
-echo "Backing up data directory"
-mkdir -p /backup/jira/$BACKUP_DAY/
-tar -czf /backup/jira/$BACKUP_DAY/$BACKUP_TIME-jira.tar.gz /var/atlassian/jira/data
+}
 
-# Create a dump of the database
-echo "Backing up database"
-mkdir -p /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/
-pg_dump -h $DATABASE_HOST -U $DATABASE_USERNAME $DATABASE_NAME > /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/jira-db.sql
+backup_database() {
+	# Create a dump of the database
+	echo "Backing up database"
+	mkdir -p /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/ || log_error "Failed to create backup directory"
+	if ! pg_dump -h $DATABASE_HOST -U $DATABASE_USERNAME $DATABASE_NAME > /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/jira-db.sql 2> "$ERROR_LOG"; then
+		log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
+	fi
+}
 
-# Cleanup export directory (keep 2 days worth of backups on disk)
-find "/var/atlassian/jira/export/" -type f -iname "*.zip" -mtime +2 -exec rm {} \;
-find "/backup/jira/" -type d -mtime +2 -exec rm -rf {} \;
-find "/backup/jira-db/" -type d -mtime +2 -exec rm -rf {} \;
+clean_up() {
+	# Cleanup export directory (keep 2 days worth of backups on disk)
+	echo "Cleaning up old backups"
+	[ -d "/var/atlassian/jira/export/" ] && find "/var/atlassian/jira/export/" -type f -iname "*.zip" -mtime +2 -exec rm {} \; || log_error "no directory exists"
+	[ -d "/backup/jira/" ] && find "/backup/jira/" -type d -mtime +2 -exec rm -rf {} \; || log_error "no directory exists"
+	[ -d "/backup/jira-db/" ] && find "/backup/jira-db/" -type d -mtime +2 -exec rm -rf {} \; || log_error "no directory exists"
+}
 
-# Copy to S3 bucket
-echo "Copying data directory to S3"
-/usr/bin/aws s3 cp --recursive --quiet /backup/jira/ s3://$BUCKET_NAME/jira-backup/data/ || echo "FAILED!"
-echo "Copying database backup to S3"
-/usr/bin/aws s3 cp --recursive --quiet /backup/jira-db/ s3://$BUCKET_NAME/jira-backup/jira-db/ || echo "FAILED!"
-echo "Copying export directory to S3"
-/usr/bin/aws s3 cp --recursive --quiet /var/atlassian/jira/export/ s3://$BUCKET_NAME/jira-backup/export/ || echo "FAILED!"
+copy_to_s3() {
+	# Copy to S3 bucket
+	echo "Copying data directory to S3"
+	if ! /usr/bin/aws s3 cp --recursive --quiet /backup/jira/ s3://$BUCKET_NAME/jira-backup/data/ 2> "$ERROR_LOG"; then
+		log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
+	fi
+	echo "Copying database backup to S3"
+	if ! /usr/bin/aws s3 cp --recursive --quiet /backup/jira-db/ s3://$BUCKET_NAME/jira-backup/jira-db/ 2> "$ERROR_LOG"; then
+		log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
+	fi
+	echo "Copying export directory to S3"
+	if ! /usr/bin/aws s3 cp --recursive --quiet /var/atlassian/jira/export/ s3://$BUCKET_NAME/jira-backup/export/ 2> "$ERROR_LOG"; then
+		log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
+	fi
+}
 
-echo "Backups finished"
-    # Sleep for an hour
+main() {
+	# Set current time
+	export CURRENT=$(date +%k)
+	if [ $CURRENT = $START_HOUR_1 -o $CURRENT = $START_HOUR_2 ]; then
+		# Set variables for date and time - used for folder structure
+		export BACKUP_DAY=$(date +%Y-%b-%d)
+		export BACKUP_TIME=$(date +%Y-%b-%d-%H%M)
+		echo "Backups starting..."
+		backup_data_dir
+		backup_database
+		clean_up
+		copy_to_s3
+		echo "Backups finished"
 		sleep 3600
-
-else
-		# Sleep for an hour
+	else
 		echo "Not time yet..."
+		# Sleep for an hour
 		sleep 3600
-fi
+	fi
+}
+
+ERROR_LOG=$(mktemp)
+trap 'rm -f "$ERROR_LOG"' EXIT
+main
