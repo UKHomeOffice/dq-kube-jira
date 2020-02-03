@@ -49,6 +49,7 @@ pipeline:
       - export BUCKET_NAME=$$NOTPROD_BUCKET_NAME
       - export ACCESS_KEY_ID=$$NOTPROD_ACCESS_KEY_ID
       - export SECRET_ACCESS_KEY=$$NOTPROD_SECRET_ACCESS_KEY
+      - export SLACK_WEBHOOK=$$NOTPROD_SLACK_WEBHOOK
       - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
     secrets:
       - NOTPROD_KUBE_TOKEN
@@ -56,6 +57,7 @@ pipeline:
       - NOTPROD_BUCKET_NAME
       - NOTPROD_ACCESS_KEY_ID
       - NOTPROD_SECRET_ACCESS_KEY
+      - NOTPROD_SLACK_WEBHOOK
     when:
       event: [push, tag, deployment]
 
