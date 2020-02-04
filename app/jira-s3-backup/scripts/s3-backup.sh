@@ -90,11 +90,13 @@ main() {
 		clean_up
 		copy_to_s3
 		echo "Backups finished"
-		sleep 3600
+		# sleep 3600
+		sleep 300
 	else
 		echo "Not time yet..."
 		# Sleep for an hour
-		sleep 3600
+		# sleep 3600
+		sleep 300
 	fi
 }
 
