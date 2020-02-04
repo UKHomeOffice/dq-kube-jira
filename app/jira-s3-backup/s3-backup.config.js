@@ -4,11 +4,8 @@ module.exports = {
       name	: "Jira-bacup-to-s3",
       script	: "/scripts/s3-backup.sh",
       exec_interpreter: "bash",
-      max_restarts: 3,
-      min_uptime: 60000,
-      restart_delay: 10000,
       env: {
-        START_HOUR_1: 16,
+        START_HOUR_1: 21,
         START_HOUR_2: 18,
         DATABASE_HOST: process.argv[6],
         DATABASE_NAME: process.argv[7],

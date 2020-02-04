@@ -27,6 +27,7 @@ send_msg_to_slack() {
 log_error() {
 	echo "Error! ${1}"
 	send_msg_to_slack "${1}"
+	exit 0
 }
 
 backup_data_dir() {
