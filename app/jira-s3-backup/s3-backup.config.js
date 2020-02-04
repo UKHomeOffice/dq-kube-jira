@@ -6,7 +6,7 @@ module.exports = {
       exec_interpreter: "bash",
       max_restarts: 5,
       env: {
-        START_HOUR_1: 14,
+        START_HOUR_1: 15,
         START_HOUR_2: 18,
         DATABASE_HOST: process.argv[6],
         DATABASE_NAME: process.argv[7],
