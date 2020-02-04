@@ -95,5 +95,5 @@ main() {
 }
 
 ERROR_LOG=$(mktemp)
-trap 'rm -f "$ERROR_LOG"' EXIT
+# trap 'rm -f "$ERROR_LOG"' EXIT
 main
