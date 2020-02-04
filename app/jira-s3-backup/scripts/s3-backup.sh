@@ -27,7 +27,7 @@ send_msg_to_slack() {
 log_error() {
 	echo "Error! ${1}"
 	send_msg_to_slack "${1}"
-	exit 0
+	# exit 0
 }
 
 backup_data_dir() {
@@ -95,5 +95,5 @@ main() {
 }
 
 ERROR_LOG=$(mktemp)
-# trap 'rm -f "$ERROR_LOG"' EXIT
+trap 'rm -f "$ERROR_LOG"' EXIT
 main
