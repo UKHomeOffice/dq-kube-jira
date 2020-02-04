@@ -5,7 +5,7 @@ module.exports = {
 	   	script	: "/scripts/s3-backup.sh",
     	exec_interpreter: "bash",
     	env: {
-    	  START_HOUR_1: 06,
+    	  START_HOUR_1: 10,
     	  START_HOUR_2: 18,
     	  DATABASE_HOST: process.argv[6],
     	  DATABASE_NAME: process.argv[7],

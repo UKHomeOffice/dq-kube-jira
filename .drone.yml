@@ -59,7 +59,7 @@ pipeline:
       - NOTPROD_SECRET_ACCESS_KEY
       - NOTPROD_SLACK_WEBHOOK
     when:
-      event: [push, tag, deployment]
+      event: push
 
   deploy_to_prod:
     image: quay.io/ukhomeofficedigital/kd
