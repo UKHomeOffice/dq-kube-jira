@@ -78,6 +78,7 @@ pipeline:
       - export BUCKET_NAME=$$PROD_BUCKET_NAME
       - export ACCESS_KEY_ID=$$PROD_ACCESS_KEY_ID
       - export SECRET_ACCESS_KEY=$$PROD_SECRET_ACCESS_KEY
+      - export SLACK_WEBHOOK=$$PROD_SLACK_WEBHOOK
       - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
     secrets:
       - PROD_KUBE_TOKEN
@@ -85,6 +86,7 @@ pipeline:
       - PROD_BUCKET_NAME
       - PROD_ACCESS_KEY_ID
       - PROD_SECRET_ACCESS_KEY
+      - PROD_SLACK_WEBHOOK
     when:
       environment: production
       branch: master
