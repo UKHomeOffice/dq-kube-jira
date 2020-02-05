@@ -3,7 +3,7 @@
 set -e
 
 send_msg_to_slack() {
-	post='
+  post='
   {
     "text": ":fire: :sad_parrot: An error has occurred in Jira backup script :sad_parrot: :fire:",
     "attachments": [{
