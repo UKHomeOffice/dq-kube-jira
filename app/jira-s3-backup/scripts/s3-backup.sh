@@ -51,7 +51,7 @@ clean_up() {
   # Cleanup export directory (keep 2 days worth of backups on disk)
   echo "Cleaning up old backups"
   [ -d "/var/atlassian/jira/export/" ] && find "/var/atlassian/jira/export/" -type f -iname "*.zip" -mtime +2 -exec rm {} \; || log_error "no /var/atlassian/jira/export/ directory exists"
-  [ -d "/backup/jira/" ] && find "/backup/jira/" -type d -mtime +2 -prune -exec rm -rf {} \; || log_error "no /backup/jira/ directory exists"
+  [ -d "/backup/jira/" ] && find "/backup/jira/" -type d -mtime +2 -exec rm -rf {} \; || log_error "no /backup/jira/ directory exists"
   [ -d "/backup/jira-db/" ] && find "/backup/jira-db/" -type d -mtime +2 -prune -exec rm -rf {} \; || log_error "no /backup/jira-db/ directory exists"
 }
 
