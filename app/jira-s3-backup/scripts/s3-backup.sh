@@ -78,7 +78,7 @@ main() {
     # Set variables for date and time - used for folder structure
     export BACKUP_DAY=$(date +%Y-%b-%d)
     export BACKUP_TIME=$(date +%Y-%b-%d-%H%M)
-    echo "Backups starting..."
+    echo "Backups starting at date:${BACKUP_DAY} and time:${BACKUP_TIME}"
     backup_data_dir
     backup_database
     clean_up
