@@ -151,3 +151,6 @@ spec:
         - name: jira
           persistentVolumeClaim:
             claimName: jira
+        - name: jira2
+          persistentVolumeClaim:
+            claimName: jira2
