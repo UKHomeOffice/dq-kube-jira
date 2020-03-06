@@ -30,15 +30,15 @@ RUN wget -q -O - https://product-downloads.atlassian.com/software/jira/downloads
 RUN mkdir -p                   "/home/jira/templates" \
     && mkdir -p                "${JIRA_HOME}" \
     && mkdir -p                "${JIRA_HOME}/caches/indexes" \
-    && chmod -R 700            "${JIRA_HOME}" \
+    && chmod -R 755            "${JIRA_HOME}" \
     && chown -R jira:jira      "${JIRA_HOME}" \
     && mkdir -p                "${JIRA_INSTALL}/conf/Catalina" \
     && rm -f                   "${JIRA_INSTALL}/lib/postgresql-9.1-903.jdbc4-atlassian-hosted.jar" \
     && curl -Ls                "https://jdbc.postgresql.org/download/postgresql-9.4.1212.jar" -o "${JIRA_INSTALL}/lib/postgresql-9.4.1212.jar" \
-    && chmod -R 700            "${JIRA_INSTALL}/conf" \
-    && chmod -R 700            "${JIRA_INSTALL}/logs" \
-    && chmod -R 700            "${JIRA_INSTALL}/temp" \
-    && chmod -R 700            "${JIRA_INSTALL}/work" \
+    && chmod -R 755            "${JIRA_INSTALL}/conf" \
+    && chmod -R 755            "${JIRA_INSTALL}/logs" \
+    && chmod -R 755            "${JIRA_INSTALL}/temp" \
+    && chmod -R 755            "${JIRA_INSTALL}/work" \
     && chown -R jira:jira      "${JIRA_INSTALL}/conf" \
     && chown -R jira:jira      "${JIRA_INSTALL}/logs" \
     && chown -R jira:jira      "${JIRA_INSTALL}/temp" \
@@ -47,7 +47,7 @@ RUN mkdir -p                   "/home/jira/templates" \
     && echo -e                 "\njira.home=$JIRA_HOME" >> "${JIRA_INSTALL}/atlassian-jira/WEB-INF/classes/jira-application.properties" \
     && touch -d "@0"           "${JIRA_INSTALL}/conf/server.xml" \
     && cp -r "${JIRA_INSTALL}/conf" "${JIRA_INSTALL}/original_conf" \
-    && chmod -R 700            "${JIRA_INSTALL}/original_conf" \
+    && chmod -R 755            "${JIRA_INSTALL}/original_conf" \
     && chown -R jira:jira      "${JIRA_INSTALL}/original_conf"
 
 # add a runtime arg to extend the timeout for plugin installs
