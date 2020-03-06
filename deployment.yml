@@ -68,7 +68,7 @@ spec:
             name: jira
         volumeMounts:
           - mountPath: /opt/atlassian/jira
-            name: jira2
+            name: jira
 
 
       - name: proxy
@@ -151,6 +151,3 @@ spec:
         - name: jira
           persistentVolumeClaim:
             claimName: jira
-        - name: jira2
-          persistentVolumeClaim:
-            claimName: jira2
