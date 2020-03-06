@@ -66,9 +66,6 @@ spec:
         volumeMounts:
           - mountPath: /var/atlassian/jira
             name: jira
-        volumeMounts:
-          - mountPath: /opt/atlassian/jira
-            name: jira
 
 
       - name: proxy
