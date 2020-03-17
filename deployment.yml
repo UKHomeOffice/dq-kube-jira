@@ -17,7 +17,7 @@ spec:
       containers:
       - name: jira
         # image: quay.io/ukhomeofficedigital/jira-docker:{{ .JIRA_VERSION }}
-        image: quay.io/ukhomeofficedigital/jira-docker:276
+        image: quay.io/ukhomeofficedigital/jira-docker:b276
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
