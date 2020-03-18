@@ -42,11 +42,13 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: endpoint
+          # - name: DATABASE_NAME
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ .DATABASE_SECRET_NAME }}
+          #       key: database_name
           - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .DATABASE_SECRET_NAME }}
-                key: database_name
+            value: {{ .TEST_SCHEMA_NAME }}
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
