@@ -42,11 +42,13 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: endpoint
+          # - name: DATABASE_NAME
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ .DATABASE_SECRET_NAME }}
+          #       key: database_name
           - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .DATABASE_SECRET_NAME }}
-                key: database_name
+            value: {{ .TEST_SCHEMA_NAME }}
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -99,13 +101,11 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: endpoint
-          # - name: DATABASE_NAME
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: {{ .DATABASE_SECRET_NAME }}
-          #       key: database_name
-          - name: DATABASE_SCHEMA_NAME
-            value: {{ .TEST_SCHEMA_NAME }}
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .DATABASE_SECRET_NAME }}
+                key: database_name
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
@@ -116,8 +116,8 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: port
-          # - name: DATABASE_SCHEMA_NAME
-          #   value: {{ .DATABASE_SCHEMA_NAME }}
+          - name: DATABASE_SCHEMA_NAME
+            value: {{ .DATABASE_SCHEMA_NAME }}
           - name: DATABASE_USERNAME
             valueFrom:
               secretKeyRef:
