@@ -116,8 +116,8 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: port
-          - name: DATABASE_SCHEMA_NAME
-            value: {{ .DATABASE_SCHEMA_NAME }}
+          # - name: DATABASE_SCHEMA_NAME
+          #   value: {{ .DATABASE_SCHEMA_NAME }}
           - name: DATABASE_USERNAME
             valueFrom:
               secretKeyRef:
