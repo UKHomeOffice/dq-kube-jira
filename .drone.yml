@@ -44,7 +44,7 @@ pipeline:
       - DATABASE_SECRET_NAME=dq-jira-notprod-rds-access
       - AWS_BUCKET_SECRET_NAME=s3-dq-notprod-management-jira-backup
       - DATABASE_SCHEMA_NAME=public
-      - TEST_SCHEMA_NAME=jiradbtest
+      - TEST_SCHEMA_NAME=jiradb
     commands:
       - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
       - export KUBE_SERVER=$$NOTPROD_KUBE_SERVER
