@@ -16,7 +16,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: jira
-        image: quay.io/ukhomeofficedigital/jira-docker:b276
+        image: quay.io/ukhomeofficedigital/jira-docker:{{ .DRONE_COMMIT_SHA }}
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
@@ -41,11 +41,13 @@ spec:
               secretKeyRef:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: endpoint
+          # - name: DATABASE_NAME
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ .DATABASE_SECRET_NAME }}
+          #       key: database_name
           - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .DATABASE_SECRET_NAME }}
-                key: database_name
+            value: {{ .TEST_DATABASE_NAME }}
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
