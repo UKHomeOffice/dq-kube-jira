@@ -33,7 +33,7 @@ backup_data_dir() {
   # Create a backup of the attachment and avatar directories in JIRA_HOME/data
   echo "Backing up jira data directory"
   mkdir -p /backup/jira/${BACKUP_DAY}/ || log_error "Failed to create backup data directory"
-  if ! tar -czf /backup/jira/${BACKUP_DAY}/${BACKUP_TIME}-jira.tar.gz /var/atlassian/jira/data 2> "$ERROR_LOG"; then
+  if ! tar -czf /backup/jira/${BACKUP_DAY}/${BACKUP_TIME}-jira-data.tar.gz /var/atlassian/jira/data 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
 }
@@ -53,6 +53,7 @@ backup_database() {
   if ! pg_dump -h $DATABASE_HOST -U $DATABASE_USERNAME $DATABASE_NAME > /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/jira-db.sql 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
+  # Create a psql compress dump
   if ! pg_dump -h $DATABASE_HOST -U $DATABASE_USERNAME -F c -b -f /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/jira-db-dump $DATABASE_NAME 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
