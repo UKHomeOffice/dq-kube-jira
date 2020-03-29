@@ -51,7 +51,7 @@ RUN mkdir -p                   "/home/jira/templates" \
     && chown -R jira:jira      "${JIRA_INSTALL}/original_conf"
 
 # add a runtime arg to extend the timeout for plugin installs
-RUN sed -i 's/^JVM_SUPPORT_RECOMMENDED_ARGS=""/JVM_SUPPORT_RECOMMENDED_ARGS="-Datlassian.plugins.enable.wait=300 -Datlassian.recovery.password=password"/' ${JIRA_INSTALL}/bin/setenv.sh
+RUN sed -i 's/^JVM_SUPPORT_RECOMMENDED_ARGS=""/JVM_SUPPORT_RECOMMENDED_ARGS="-Datlassian.plugins.enable.wait=300"/' ${JIRA_INSTALL}/bin/setenv.sh
 
 VOLUME ["/var/atlassian/jira"]
 
