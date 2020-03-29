@@ -41,7 +41,7 @@ backup_data_dir() {
 backup_home_dir() {
   echo "Backing up jira home directory"
   mkdir -p /backup/jira/${BACKUP_DAY}/ || log_error "Failed to create backup data directory"
-  if ! tar -czf /backup/jira/${BACKUP_DAY}/${BACKUP_TIME}-jira-home.tar.gz /var/atlassian/jira 2> "$ERROR_LOG"; then
+  if ! tar -czf /backup/jira/${BACKUP_DAY}/${BACKUP_TIME}-jira-home.tar.gz -C /var/atlassian/ jira/ 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
 }
