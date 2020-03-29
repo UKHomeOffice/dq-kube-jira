@@ -11,7 +11,8 @@ RUN yum update -y \
     && curl -sL https://raw.githubusercontent.com/nodesource/distributions/master/rpm/setup_11.x -o setup_11.x && bash setup_11.x && rm setup_11.x \
     && yum install -y nodejs \
     && npm install -g pm2 \
-    && pip install --upgrade pip
+    && pip install --upgrade pip \
+    && ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
 
 RUN groupadd -r s3user && \
 useradd -u $USERMAP_UID -r -g s3user s3user && \
