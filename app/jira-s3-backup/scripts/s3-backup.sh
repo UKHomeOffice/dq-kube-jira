@@ -31,9 +31,17 @@ log_error() {
 
 backup_data_dir() {
   # Create a backup of the attachment and avatar directories in JIRA_HOME/data
-  echo "Backing up data directory"
+  echo "Backing up jira data directory"
   mkdir -p /backup/jira/${BACKUP_DAY}/ || log_error "Failed to create backup data directory"
   if ! tar -czf /backup/jira/${BACKUP_DAY}/${BACKUP_TIME}-jira.tar.gz /var/atlassian/jira/data 2> "$ERROR_LOG"; then
+    log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
+  fi
+}
+
+backup_home_dir() {
+  echo "Backing up jira home directory"
+  mkdir -p /backup/jira/${BACKUP_DAY}/ || log_error "Failed to create backup data directory"
+  if ! tar -czf /backup/jira/${BACKUP_DAY}/${BACKUP_TIME}-jira-home.tar.gz /var/atlassian/jira 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
 }
@@ -43,6 +51,9 @@ backup_database() {
   echo "Backing up database"
   mkdir -p /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/ || log_error "Failed to create backup directory"
   if ! pg_dump -h $DATABASE_HOST -U $DATABASE_USERNAME $DATABASE_NAME > /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/jira-db.sql 2> "$ERROR_LOG"; then
+    log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
+  fi
+  if ! pg_dump -h $DATABASE_HOST -U $DATABASE_USERNAME -F c -b -f /backup/jira-db/$BACKUP_DAY/$BACKUP_TIME/jira-db-dump $DATABASE_NAME 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
 }
@@ -81,6 +92,9 @@ main() {
     echo "Backups starting at ${BACKUP_TIME}"
     backup_data_dir
     backup_database
+    if [ $CURRENT = $START_HOUR_2 ]; then
+      backup_home_dir
+    fi
     clean_up
     copy_to_s3
     echo "Backups finished"
