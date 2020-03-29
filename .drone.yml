@@ -14,7 +14,7 @@ pipeline:
     build_args:
       - JIRA_VERSION=${JIRA_VERSION}
     tags:
-      - ${JIRA_VERSION}
+      - ${DRONE_COMMIT_SHA}
       - b${DRONE_BUILD_NUMBER}
     when:
       event: push
