@@ -6,7 +6,7 @@ module.exports = {
       exec_interpreter: "bash",
       env: {
         START_HOUR_1: 06,
-        START_HOUR_2: 18,
+        START_HOUR_2: 22,
         DATABASE_HOST: process.argv[6],
         DATABASE_NAME: process.argv[7],
         PGPASSWORD: process.argv[8],
