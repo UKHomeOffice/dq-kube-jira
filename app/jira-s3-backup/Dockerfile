@@ -8,6 +8,7 @@ RUN yum update -y \
     && yum upgrade -y \
     && yum install -y epel-release \
     && yum install -y python-pip \
+    && yum install -y python-devel libpython-dev which initscripts cronie \
     && curl -sL https://raw.githubusercontent.com/nodesource/distributions/master/rpm/setup_11.x -o setup_11.x && bash setup_11.x && rm setup_11.x \
     && yum install -y nodejs \
     && npm install -g pm2 \
@@ -36,7 +37,15 @@ RUN pip install awscli --upgrade
 
 # Add postgresql-client
 RUN rpm -ivh https://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-3.noarch.rpm
+# RUN rpm -ivh https://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 RUN yum install -y postgresql95
+
+# Copy in CWLOG
+COPY file/awslogs.conf ./
+
+RUN curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
+RUN chmod +x ./awslogs-agent-setup.py
+RUN ./awslogs-agent-setup.py --non-interactive --region eu-west-2 --configfile ./awslogs.conf
 
 # Change user to s3user
 USER ${USERMAP_UID}
