@@ -43,8 +43,10 @@ RUN yum install -y postgresql95
 COPY file/awslogs.conf ./
 
 RUN curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
+RUN curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/AgentDependencies.tar.gz -O
+RUN tar xvf AgentDependencies.tar.gz -C /tmp/
 RUN chmod +x ./awslogs-agent-setup.py
-RUN ./awslogs-agent-setup.py --non-interactive --region eu-west-2 --configfile ./awslogs.conf
+RUN ./awslogs-agent-setup.py --non-interactive --region eu-west-2 --configfile ./awslogs.conf --dependency-path /tmp/AgentDependencies
 
 # Change user to s3user
 USER ${USERMAP_UID}
