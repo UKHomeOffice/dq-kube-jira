@@ -36,8 +36,7 @@ COPY ./s3-backup.config.js /s3-backup.config.js
 RUN pip install awscli --upgrade
 
 # Add postgresql-client
-RUN rpm -ivh https://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-3.noarch.rpm
-# RUN rpm -ivh https://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+/RUN rpm -ivh https://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 RUN yum install -y postgresql95
 
 # Copy in CWLOG
