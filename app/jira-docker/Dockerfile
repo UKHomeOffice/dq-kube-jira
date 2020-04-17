@@ -61,6 +61,9 @@ WORKDIR /var/atlassian/jira
 COPY --chown=jira:jira "assets/jira_home/dbconfig.xml" "/home/jira/templates/"
 COPY --chown=jira:jira "assets/jira_install/conf/server.xml" "/home/jira/templates/"
 
+# Turn on http access log
+RUN sed -i 's/AccessLogFilter = OFF/AccessLogFilter = ALL/' ${JIRA_INSTALL}/atlassian-jira/WEB-INF/classes/log4j.properties
+
 COPY "docker-entrypoint.sh" "/"
 RUN chmod +x /docker-entrypoint.sh
 
