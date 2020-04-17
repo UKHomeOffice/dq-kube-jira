@@ -32,6 +32,19 @@ pipeline:
     when:
       event: push
 
+  build_cw_agent:
+    image: ukhomeoffice/drone-docker
+    repo: quay.io/ukhomeofficedigital/dq-cw-agent
+    secrets: [ docker_username, docker_password ]
+    registry: quay.io
+    context: app/jira-cwlog-agent
+    dockerfile: app/jira-cwlog-agent/Dockerfile
+    tags:
+      - ${DRONE_COMMIT_SHA}
+      - b${DRONE_BUILD_NUMBER}
+    when:
+      event: push
+
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd
     environment:
@@ -42,6 +55,7 @@ pipeline:
       - HOSTNAME=jira.notprod.dq.homeoffice.gov.uk
       - DATABASE_SECRET_NAME=dq-jira-notprod-rds-access
       - AWS_BUCKET_SECRET_NAME=s3-dq-notprod-management-jira-backup
+      - AWS_CW_SECRET_NAME=dq-notprod-cw-agent
       - DATABASE_SCHEMA_NAME=public
     commands:
       - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
@@ -50,7 +64,15 @@ pipeline:
       - export ACCESS_KEY_ID=$$NOTPROD_ACCESS_KEY_ID
       - export SECRET_ACCESS_KEY=$$NOTPROD_SECRET_ACCESS_KEY
       - export SLACK_WEBHOOK=$$NOTPROD_SLACK_WEBHOOK
-      - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
+      - export CW_ACCESS_KEY_ID=$$TEST_CW_ACCESS_KEY_ID
+      - export CW_SECRET_ACCESS_KEY=$$TEST_CW_SECRET_ACCESS_KEY
+      - kd -f network-policy.yml \
+           -f pvc.yml \
+           -f service.yml \
+           -f ingress.yml \
+           -f secrets.yml \
+           -f cw-secrets.yml \
+           -f deployment.yml
     secrets:
       - NOTPROD_KUBE_TOKEN
       - NOTPROD_KUBE_SERVER
@@ -58,6 +80,8 @@ pipeline:
       - NOTPROD_ACCESS_KEY_ID
       - NOTPROD_SECRET_ACCESS_KEY
       - NOTPROD_SLACK_WEBHOOK
+      - TEST_CW_ACCESS_KEY_ID
+      - TEST_CW_SECRET_ACCESS_KEY
     when:
       event: push
 
@@ -79,7 +103,12 @@ pipeline:
       - export ACCESS_KEY_ID=$$PROD_ACCESS_KEY_ID
       - export SECRET_ACCESS_KEY=$$PROD_SECRET_ACCESS_KEY
       - export SLACK_WEBHOOK=$$PROD_SLACK_WEBHOOK
-      - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
+      - kd -f network-policy.yml \
+           -f pvc.yml \
+           -f service.yml \
+           -f ingress.yml \
+           -f secrets.yml \
+           -f deployment.yml
     secrets:
       - PROD_KUBE_TOKEN
       - PROD_KUBE_SERVER

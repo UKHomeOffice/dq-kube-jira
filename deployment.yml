@@ -144,6 +144,26 @@ spec:
           - mountPath: /var/atlassian/jira
             name: jira
 
+      - name: cwagent
+        image: quay.io/ukhomeofficedigital/dq-cw-agent:{{ .DRONE_COMMIT_SHA }}
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+        env:
+          - name: CW_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .AWS_CW_SECRET_NAME }}
+                key: access_key_id
+          - name: CW_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .AWS_CW_SECRET_NAME }}
+                key: secret_access_key
+        volumeMounts:
+          - mountPath: /var/atlassian/jira
+            name: jira
+
       volumes:
         - name: jira
           persistentVolumeClaim:
