@@ -27,4 +27,6 @@ RUN chmod +x /docker-entrypoint.sh
 
 USER ${USERMAP_UID}
 
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
 CMD ["/bin/sh", "/var/awslogs/bin/awslogs-agent-launcher.sh"]
