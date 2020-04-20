@@ -64,8 +64,8 @@ pipeline:
       - export ACCESS_KEY_ID=$$NOTPROD_ACCESS_KEY_ID
       - export SECRET_ACCESS_KEY=$$NOTPROD_SECRET_ACCESS_KEY
       - export SLACK_WEBHOOK=$$NOTPROD_SLACK_WEBHOOK
-      - export CW_ACCESS_KEY_ID=$$TEST_CW_ACCESS_KEY_ID
-      - export CW_SECRET_ACCESS_KEY=$$TEST_CW_SECRET_ACCESS_KEY
+      - export CW_ACCESS_KEY_ID=$$NOTPROD_CW_ACCESS_KEY_ID
+      - export CW_SECRET_ACCESS_KEY=$$NOTPROD_CW_SECRET_ACCESS_KEY
       - |
           kd --file network-policy.yml \
              --file pvc.yml \
@@ -81,8 +81,8 @@ pipeline:
       - NOTPROD_ACCESS_KEY_ID
       - NOTPROD_SECRET_ACCESS_KEY
       - NOTPROD_SLACK_WEBHOOK
-      - TEST_CW_ACCESS_KEY_ID
-      - TEST_CW_SECRET_ACCESS_KEY
+      - NOTPROD_CW_ACCESS_KEY_ID
+      - NOTPROD_CW_SECRET_ACCESS_KEY
     when:
       event: push
 
