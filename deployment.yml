@@ -160,7 +160,7 @@ spec:
                 name: {{ .AWS_CW_SECRET_NAME }}
                 key: secret_access_key
         volumeMounts:
-          - mountPath: /var/atlassian/jira
+          - mountPath: /var/atlassian/jira/log
             name: jira
 
       volumes:
