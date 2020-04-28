@@ -69,7 +69,7 @@ spec:
 
 
       - name: proxy
-        image: quay.io/ukhomeofficedigital/nginx-proxy
+        image: quay.io/ukhomeofficedigital/dq-nginx-proxy-redirect:b54
         securityContext:
           runAsNonRoot: true
         env:
