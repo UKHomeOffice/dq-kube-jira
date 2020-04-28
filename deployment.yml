@@ -1,10 +1,13 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jira
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: jira
   revisionHistoryLimit: 3
   template:
     metadata:
