@@ -50,7 +50,7 @@ pipeline:
       - export ACCESS_KEY_ID=$$NOTPROD_ACCESS_KEY_ID
       - export SECRET_ACCESS_KEY=$$NOTPROD_SECRET_ACCESS_KEY
       - export SLACK_WEBHOOK=$$NOTPROD_SLACK_WEBHOOK
-      - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
+      - kd -f network-policy.yml -f network-policy-cert.yaml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
     secrets:
       - NOTPROD_KUBE_TOKEN
       - NOTPROD_KUBE_SERVER
@@ -79,7 +79,7 @@ pipeline:
       - export ACCESS_KEY_ID=$$PROD_ACCESS_KEY_ID
       - export SECRET_ACCESS_KEY=$$PROD_SECRET_ACCESS_KEY
       - export SLACK_WEBHOOK=$$PROD_SLACK_WEBHOOK
-      - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
+      - kd -f network-policy.yml -f network-policy-cert.yaml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
     secrets:
       - PROD_KUBE_TOKEN
       - PROD_KUBE_SERVER
