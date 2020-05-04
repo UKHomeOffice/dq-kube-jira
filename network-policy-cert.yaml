@@ -1,0 +1,23 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: permit-certmanager-acme
+spec:
+  policyTypes:
+  - Ingress
+  podSelector:
+    matchExpressions:
+    - {key: certmanager.k8s.io/acme-http-domain, operator: Exists}
+    - {key: certmanager.k8s.io/acme-http-token, operator: Exists}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-external
+    - podSelector:
+        matchLabels:
+          name: ingress
+    ports:
+    - protocol: TCP
+      port: 8089
