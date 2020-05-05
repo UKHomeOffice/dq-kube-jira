@@ -1,15 +1,11 @@
----
-kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: permit-certmanager-acme
+  name: allow-external-ingress
 spec:
-  policyTypes:
-  - Ingress
   podSelector:
-    matchExpressions:
-    - {key: certmanager.k8s.io/acme-http-domain, operator: Exists}
-    - {key: certmanager.k8s.io/acme-http-token, operator: Exists}
+    matchLabels:
+      name: jira
   ingress:
   - from:
     - namespaceSelector:
@@ -20,4 +16,4 @@ spec:
           name: ingress
     ports:
     - protocol: TCP
-      port: 8089
+      port: 10443
