@@ -147,6 +147,18 @@ spec:
           - mountPath: /var/atlassian/jira
             name: jira
 
+      - name: access-log
+        image: quay.io/ukhomeofficedigital/dq-busybox:{{ .DRONE_COMMIT_SHA }}
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+        env:
+          - name: ACCESS_LOG_PATH
+            value: '/var/atlassian/jira/log/atlassian-jira-http-access.log'
+        volumeMounts:
+          - mountPath: /var/atlassian/jira
+            name: jira
+
       volumes:
         - name: jira
           persistentVolumeClaim:
