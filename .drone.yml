@@ -32,6 +32,19 @@ pipeline:
     when:
       event: push
 
+  build_access_log:
+    image: ukhomeoffice/drone-docker
+    repo: quay.io/ukhomeofficedigital/dq-busybox
+    secrets: [ docker_username, docker_password ]
+    registry: quay.io
+    context: app/jira-access-log
+    dockerfile: app/jira-access-log/Dockerfile
+    tags:
+      - ${DRONE_COMMIT_SHA}
+      - b${DRONE_BUILD_NUMBER}
+    when:
+      event: push
+
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd
     environment:

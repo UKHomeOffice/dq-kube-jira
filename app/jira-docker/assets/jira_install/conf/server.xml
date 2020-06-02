@@ -167,8 +167,13 @@
 
             -->
             <Valve className="org.apache.catalina.valves.AccessLogValve"
+                   requestAttributesEnabled="true"
                    pattern="%a %{jira.request.id}r %{jira.request.username}r %t &quot;%m %U%q %H&quot; %s %b %D &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; &quot;%{jira.request.assession.id}r&quot;"/>
-
+            <Valve
+                   className="org.apache.catalina.valves.RemoteIpValve"
+                   remoteIpHeader="x-forwarded-for"
+                   remoteIpProxiesHeader="x-forwarded-by"/>
+                   
         </Engine>
     </Service>
 </Server>
