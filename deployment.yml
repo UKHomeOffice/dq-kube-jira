@@ -148,7 +148,7 @@ spec:
             name: jira
 
       - name: access-log
-        image: quay.io/ukhomeofficedigital/dq-busybox:{{ .DRONE_COMMIT_SHA }}
+        image: quay.io/ukhomeofficedigital/dq-logger:{{ .DRONE_COMMIT_SHA }}
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
