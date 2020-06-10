@@ -70,15 +70,15 @@ clean_up() {
 copy_to_s3() {
   # Copy to S3 bucket
   echo "Copying data directory to S3"
-  if ! /usr/bin/aws s3 cp --recursive /backup/jira/ s3://$BUCKET_NAME/jira-backup/data/ 2> "$ERROR_LOG"; then
+  if ! /usr/bin/aws s3 cp --recursive /backup/jira/$BACKUP_DAY s3://$BUCKET_NAME/jira-backup/data/$BACKUP_DAY 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
   echo "Copying database backup to S3"
-  if ! /usr/bin/aws s3 cp --recursive /backup/jira-db/ s3://$BUCKET_NAME/jira-backup/jira-db/ 2> "$ERROR_LOG"; then
+  if ! /usr/bin/aws s3 cp --recursive /backup/jira-db/$BACKUP_DAY s3://$BUCKET_NAME/jira-backup/jira-db/$BACKUP_DAY 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
   echo "Copying export directory to S3"
-  if ! /usr/bin/aws s3 cp --recursive /var/atlassian/jira/export/ s3://$BUCKET_NAME/jira-backup/export/ 2> "$ERROR_LOG"; then
+  if ! /usr/bin/aws s3 cp --recursive /var/atlassian/jira/export/$BACKUP_DAY s3://$BUCKET_NAME/jira-backup/export/$BACKUP_DAY 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
 }
