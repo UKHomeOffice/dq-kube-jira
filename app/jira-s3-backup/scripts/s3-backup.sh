@@ -80,7 +80,7 @@ copy_to_s3() {
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
   echo "Copying export directory to S3"
-  if ! /usr/bin/aws s3 cp --recursive /var/atlassian/jira/export/ s3://$BUCKET_NAME/jira-backup/export/ 2> "$ERROR_LOG"; then
+  if ! /usr/bin/aws s3 cp  /var/atlassian/jira/export/ s3://$BUCKET_NAME/jira-backup/export/ --recursive --exclude "*" --include "$BACKUP_DAY*" 2> "$ERROR_LOG"; then
     log_error "$(cat "${ERROR_LOG}" | tr -d '"')"
   fi
 }
