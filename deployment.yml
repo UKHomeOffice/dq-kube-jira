@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    downscaler/uptime: {{.DOWNSCALER_UPTIME}}
+    {{.DOWNSCALER_UPTIME}}
   name: jira
 spec:
   replicas: 1

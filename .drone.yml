@@ -48,7 +48,7 @@ pipeline:
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd
     environment:
-      - DOWNSCALER_UPTIME="Mon-Fri 07:00-18:30 Europe/London"
+      - DOWNSCALER_UPTIME="downscaleruptime: Mon-Fri 07:00-18:30 Europe/London"
       - JIRA_VERSION=${JIRA_VERSION}
       - KUBE_NAMESPACE=dq-management-notprod
       - INSECURE_SKIP_TLS_VERIFY=true
@@ -78,7 +78,7 @@ pipeline:
   deploy_to_prod:
     image: quay.io/ukhomeofficedigital/kd
     environment:
-      - DOWNSCALER_UPTIME="Production"
+      - DOWNSCALER_UPTIME="env: Production"
       - JIRA_VERSION=${JIRA_VERSION}
       - KUBE_NAMESPACE=dq-management
       - INSECURE_SKIP_TLS_VERIFY=true
