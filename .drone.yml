@@ -2,48 +2,48 @@ matrix:
   JIRA_VERSION:
     - 8.7.1
 
-pipeline:
-  build_jira:
-    image: ukhomeoffice/drone-docker
-    repo: quay.io/ukhomeofficedigital/jira-docker
-    secrets: [ docker_username, docker_password ]
-    registry: quay.io
-    context: app/jira-docker
-    dockerfile: app/jira-docker/Dockerfile
-    force_tag: true
-    build_args:
-      - JIRA_VERSION=${JIRA_VERSION}
-    tags:
-      - ${DRONE_COMMIT_SHA}
-      - b${DRONE_BUILD_NUMBER}
-    when:
-      event: push
-
-  build_jira_backup:
-    image: ukhomeoffice/drone-docker
-    repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
-    secrets: [ docker_username, docker_password ]
-    registry: quay.io
-    context: app/jira-s3-backup
-    dockerfile: app/jira-s3-backup/Dockerfile
-    tags:
-      - ${DRONE_COMMIT_SHA}
-      - b${DRONE_BUILD_NUMBER}
-    when:
-      event: push
-
-  build_access_log:
-    image: ukhomeoffice/drone-docker
-    repo: quay.io/ukhomeofficedigital/dq-logger
-    secrets: [ docker_username, docker_password ]
-    registry: quay.io
-    context: app/jira-logger
-    dockerfile: app/jira-logger/Dockerfile
-    tags:
-      - ${DRONE_COMMIT_SHA}
-      - b${DRONE_BUILD_NUMBER}
-    when:
-      event: push
+# pipeline:
+#   build_jira:
+#     image: ukhomeoffice/drone-docker
+#     repo: quay.io/ukhomeofficedigital/jira-docker
+#     secrets: [ docker_username, docker_password ]
+#     registry: quay.io
+#     context: app/jira-docker
+#     dockerfile: app/jira-docker/Dockerfile
+#     force_tag: true
+#     build_args:
+#       - JIRA_VERSION=${JIRA_VERSION}
+#     tags:
+#       - ${DRONE_COMMIT_SHA}
+#       - b${DRONE_BUILD_NUMBER}
+#     when:
+#       event: push
+#
+#   build_jira_backup:
+#     image: ukhomeoffice/drone-docker
+#     repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
+#     secrets: [ docker_username, docker_password ]
+#     registry: quay.io
+#     context: app/jira-s3-backup
+#     dockerfile: app/jira-s3-backup/Dockerfile
+#     tags:
+#       - ${DRONE_COMMIT_SHA}
+#       - b${DRONE_BUILD_NUMBER}
+#     when:
+#       event: push
+#
+#   build_access_log:
+#     image: ukhomeoffice/drone-docker
+#     repo: quay.io/ukhomeofficedigital/dq-logger
+#     secrets: [ docker_username, docker_password ]
+#     registry: quay.io
+#     context: app/jira-logger
+#     dockerfile: app/jira-logger/Dockerfile
+#     tags:
+#       - ${DRONE_COMMIT_SHA}
+#       - b${DRONE_BUILD_NUMBER}
+#     when:
+#       event: push
 
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd
@@ -58,13 +58,15 @@ pipeline:
       - AWS_BUCKET_SECRET_NAME=s3-dq-notprod-management-jira-backup
       - DATABASE_SCHEMA_NAME=public
     commands:
-      - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
-      - export KUBE_SERVER=$$NOTPROD_KUBE_SERVER
-      - export BUCKET_NAME=$$NOTPROD_BUCKET_NAME
-      - export ACCESS_KEY_ID=$$NOTPROD_ACCESS_KEY_ID
-      - export SECRET_ACCESS_KEY=$$NOTPROD_SECRET_ACCESS_KEY
-      - export SLACK_WEBHOOK=$$NOTPROD_SLACK_WEBHOOK
-      - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
+      - echo $$NOTPROD_KUBE_TOKEN
+      - echo $$NOTPROD_KUBE_SERVER
+    #   - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
+    #   - export KUBE_SERVER=$$NOTPROD_KUBE_SERVER
+    #   - export BUCKET_NAME=$$NOTPROD_BUCKET_NAME
+    #   - export ACCESS_KEY_ID=$$NOTPROD_ACCESS_KEY_ID
+    #   - export SECRET_ACCESS_KEY=$$NOTPROD_SECRET_ACCESS_KEY
+    #   - export SLACK_WEBHOOK=$$NOTPROD_SLACK_WEBHOOK
+    #   - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
     secrets:
       - NOTPROD_KUBE_TOKEN
       - NOTPROD_KUBE_SERVER
@@ -75,34 +77,34 @@ pipeline:
     when:
       event: push
 
-  deploy_to_prod:
-    image: quay.io/ukhomeofficedigital/kd
-    environment:
-      - ENV=prod
-      - JIRA_VERSION=${JIRA_VERSION}
-      - KUBE_NAMESPACE=dq-management
-      - INSECURE_SKIP_TLS_VERIFY=true
-      - JIRA_HOME_VOLUME_SIZE=25Gi
-      - HOSTNAME=jira.dq.homeoffice.gov.uk
-      - DATABASE_SECRET_NAME=dq-management-jira-rds-access
-      - AWS_BUCKET_SECRET_NAME=s3-dq-management-jira-backup
-      - DATABASE_SCHEMA_NAME=public
-    commands:
-      - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
-      - export KUBE_SERVER=$$PROD_KUBE_SERVER
-      - export BUCKET_NAME=$$PROD_BUCKET_NAME
-      - export ACCESS_KEY_ID=$$PROD_ACCESS_KEY_ID
-      - export SECRET_ACCESS_KEY=$$PROD_SECRET_ACCESS_KEY
-      - export SLACK_WEBHOOK=$$PROD_SLACK_WEBHOOK
-      - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
-    secrets:
-      - PROD_KUBE_TOKEN
-      - PROD_KUBE_SERVER
-      - PROD_BUCKET_NAME
-      - PROD_ACCESS_KEY_ID
-      - PROD_SECRET_ACCESS_KEY
-      - PROD_SLACK_WEBHOOK
-    when:
-      environment: production
-      branch: master
-      event: deployment
+  # deploy_to_prod:
+  #   image: quay.io/ukhomeofficedigital/kd
+  #   environment:
+  #     - ENV=prod
+  #     - JIRA_VERSION=${JIRA_VERSION}
+  #     - KUBE_NAMESPACE=dq-management
+  #     - INSECURE_SKIP_TLS_VERIFY=true
+  #     - JIRA_HOME_VOLUME_SIZE=25Gi
+  #     - HOSTNAME=jira.dq.homeoffice.gov.uk
+  #     - DATABASE_SECRET_NAME=dq-management-jira-rds-access
+  #     - AWS_BUCKET_SECRET_NAME=s3-dq-management-jira-backup
+  #     - DATABASE_SCHEMA_NAME=public
+  #   commands:
+  #     - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
+  #     - export KUBE_SERVER=$$PROD_KUBE_SERVER
+  #     - export BUCKET_NAME=$$PROD_BUCKET_NAME
+  #     - export ACCESS_KEY_ID=$$PROD_ACCESS_KEY_ID
+  #     - export SECRET_ACCESS_KEY=$$PROD_SECRET_ACCESS_KEY
+  #     - export SLACK_WEBHOOK=$$PROD_SLACK_WEBHOOK
+  #     - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
+  #   secrets:
+  #     - PROD_KUBE_TOKEN
+  #     - PROD_KUBE_SERVER
+  #     - PROD_BUCKET_NAME
+  #     - PROD_ACCESS_KEY_ID
+  #     - PROD_SECRET_ACCESS_KEY
+  #     - PROD_SLACK_WEBHOOK
+  #   when:
+  #     environment: production
+  #     branch: master
+  #     event: deployment
