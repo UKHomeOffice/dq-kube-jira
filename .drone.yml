@@ -77,19 +77,21 @@ pipeline:
     when:
       event: push
 
-  # deploy_to_prod:
-  #   image: quay.io/ukhomeofficedigital/kd
-  #   environment:
-  #     - ENV=prod
-  #     - JIRA_VERSION=${JIRA_VERSION}
-  #     - KUBE_NAMESPACE=dq-management
-  #     - INSECURE_SKIP_TLS_VERIFY=true
-  #     - JIRA_HOME_VOLUME_SIZE=25Gi
-  #     - HOSTNAME=jira.dq.homeoffice.gov.uk
-  #     - DATABASE_SECRET_NAME=dq-management-jira-rds-access
-  #     - AWS_BUCKET_SECRET_NAME=s3-dq-management-jira-backup
-  #     - DATABASE_SCHEMA_NAME=public
-  #   commands:
+  deploy_to_prod:
+    image: quay.io/ukhomeofficedigital/kd
+    environment:
+      - ENV=prod
+      - JIRA_VERSION=${JIRA_VERSION}
+      - KUBE_NAMESPACE=dq-management
+      - INSECURE_SKIP_TLS_VERIFY=true
+      - JIRA_HOME_VOLUME_SIZE=25Gi
+      - HOSTNAME=jira.dq.homeoffice.gov.uk
+      - DATABASE_SECRET_NAME=dq-management-jira-rds-access
+      - AWS_BUCKET_SECRET_NAME=s3-dq-management-jira-backup
+      - DATABASE_SCHEMA_NAME=public
+    commands:
+        - echo $$PROD_KUBE_TOKEN
+        - echo $$PROD_KUBE_SERVER
   #     - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
   #     - export KUBE_SERVER=$$PROD_KUBE_SERVER
   #     - export BUCKET_NAME=$$PROD_BUCKET_NAME
@@ -97,14 +99,16 @@ pipeline:
   #     - export SECRET_ACCESS_KEY=$$PROD_SECRET_ACCESS_KEY
   #     - export SLACK_WEBHOOK=$$PROD_SLACK_WEBHOOK
   #     - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
-  #   secrets:
-  #     - PROD_KUBE_TOKEN
-  #     - PROD_KUBE_SERVER
-  #     - PROD_BUCKET_NAME
-  #     - PROD_ACCESS_KEY_ID
-  #     - PROD_SECRET_ACCESS_KEY
-  #     - PROD_SLACK_WEBHOOK
+    secrets:
+      - PROD_KUBE_TOKEN
+      - PROD_KUBE_SERVER
+      - PROD_BUCKET_NAME
+      - PROD_ACCESS_KEY_ID
+      - PROD_SECRET_ACCESS_KEY
+      - PROD_SLACK_WEBHOOK
   #   when:
   #     environment: production
   #     branch: master
   #     event: deployment
+    when:
+      event: push
