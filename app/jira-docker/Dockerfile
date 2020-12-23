@@ -22,6 +22,9 @@ RUN apk add py-pip \
     && pip install --upgrade pip \
     && pip install awscli
 
+# install psql
+RUN apk add postgresql-client
+
 # Install Atlassian JIRA and helper tools
 RUN mkdir -p ${JIRA_INSTALL}
 RUN wget -q -O - https://product-downloads.atlassian.com/software/jira/downloads/atlassian-jira-software-${JIRA_VERSION}.tar.gz | tar xz --strip=1 -C ${JIRA_INSTALL} || \
