@@ -7,11 +7,9 @@ ENV USERMAP_UID 1000
 RUN yum update -y \
     && yum upgrade -y \
     && yum install -y epel-release \
-    && yum install -y python-pip \
     && curl -sL https://raw.githubusercontent.com/nodesource/distributions/master/rpm/setup_11.x -o setup_11.x && bash setup_11.x && rm setup_11.x \
     && yum install -y nodejs \
     && npm install -g pm2 \
-    && pip install --upgrade pip \
     && ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
 
 RUN groupadd -r s3user && \
@@ -32,7 +30,10 @@ RUN chmod +x /scripts/s3-backup.sh
 COPY ./s3-backup.config.js /s3-backup.config.js
 
 # Add AWS Cli tool
-RUN pip install awscli --upgrade
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && yum install -y unzip \
+    && unzip awscliv2.zip \
+    && ./aws/install
 
 # Add postgresql-client
 # RUN rpm -ivh https://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-3.noarch.rpm
