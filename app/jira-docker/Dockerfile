@@ -29,6 +29,7 @@ RUN wget -q -O - https://product-downloads.atlassian.com/software/jira/downloads
 
 RUN mkdir -p                   "/home/jira/templates" \
     && mkdir -p                "${JIRA_HOME}" \
+    && mkdir -p                "/var/atlassian/jira-pg96" \
     && mkdir -p                "${JIRA_HOME}/caches/indexes" \
     && chmod -R 700            "${JIRA_HOME}" \
     && chown -R jira:jira      "${JIRA_HOME}" \
