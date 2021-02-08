@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: jira-ingress
+  name: jira-ingress-pg96
   labels:
     cert-manager.io/solver: http01
   annotations:
@@ -14,12 +14,12 @@ spec:
   tls:
   - hosts:
     - {{ .HOSTNAME}}
-    secretName: jira-tls-cmio
+    secretName: jira-pg96-tls-cmio
   rules:
   - host: {{ .HOSTNAME}}
     http:
       paths:
       - backend:
-          serviceName: jira-service
+          serviceName: jira-service-pg96
           servicePort: https
         path: /

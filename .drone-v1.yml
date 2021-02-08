@@ -167,7 +167,7 @@ steps:
     DATABASE_SECRET_NAME: dq-jira-rds-access-2
     # DATABASE_SECRET_NAME: dq-management-jira-rds-access
     ENV: prod
-    HOSTNAME: jira.dq.homeoffice.gov.uk
+    HOSTNAME: jira-pg96.dq.homeoffice.gov.uk
     INSECURE_SKIP_TLS_VERIFY: true
     JIRA_HOME_VOLUME_SIZE: 25Gi
     JIRA_VERSION: 8.7.1

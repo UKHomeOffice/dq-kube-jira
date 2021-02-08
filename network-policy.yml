@@ -5,7 +5,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      name: jira
+      name: jira-pg96
   ingress:
   - from:
     - namespaceSelector:
