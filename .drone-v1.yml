@@ -8,28 +8,28 @@ platform:
   arch: amd64
 
 steps:
-# - name: build_jira
-#   pull: if-not-exists
-#   image: plugins/docker
-#   settings:
-#     build_args:
-#     - JIRA_VERSION=8.7.1
-#     context: app/jira-docker
-#     dockerfile: app/jira-docker/Dockerfile
-#     force_tag: true
-#     registry: quay.io
-#     repo: quay.io/ukhomeofficedigital/jira-docker
-#     tags:
-#     - ${DRONE_COMMIT_SHA}
-#     - b${DRONE_BUILD_NUMBER}
-#   environment:
-#     DOCKER_PASSWORD:
-#       from_secret: docker_password
-#     DOCKER_USERNAME:
-#       from_secret: docker_username
-#   when:
-#     event:
-#     - push
+- name: build_jira
+  pull: if-not-exists
+  image: plugins/docker
+  settings:
+    build_args:
+    - JIRA_VERSION=8.7.1
+    context: app/jira-docker
+    dockerfile: app/jira-docker/Dockerfile
+    force_tag: true
+    registry: quay.io
+    repo: quay.io/ukhomeofficedigital/jira-docker
+    tags:
+    - ${DRONE_COMMIT_SHA}
+    - b${DRONE_BUILD_NUMBER}
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    DOCKER_USERNAME:
+      from_secret: docker_username
+  when:
+    event:
+    - push
 
 # - name: Anchore Scan Jira
 #   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
@@ -45,25 +45,25 @@ steps:
 #     event:
 #       - push
 #
-# - name: build_jira_backup
-#   pull: if-not-exists
-#   image: plugins/docker
-#   settings:
-#     context: app/jira-s3-backup
-#     dockerfile: app/jira-s3-backup/Dockerfile
-#     registry: quay.io
-#     repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
-#     tags:
-#     - ${DRONE_COMMIT_SHA}
-#     - b${DRONE_BUILD_NUMBER}
-#   environment:
-#     DOCKER_PASSWORD:
-#       from_secret: docker_password
-#     DOCKER_USERNAME:
-#       from_secret: docker_username
-#   when:
-#     event:
-#     - push
+- name: build_jira_backup
+  pull: if-not-exists
+  image: plugins/docker
+  settings:
+    context: app/jira-s3-backup
+    dockerfile: app/jira-s3-backup/Dockerfile
+    registry: quay.io
+    repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
+    tags:
+    - ${DRONE_COMMIT_SHA}
+    - b${DRONE_BUILD_NUMBER}
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    DOCKER_USERNAME:
+      from_secret: docker_username
+  when:
+    event:
+    - push
 #
 # - name: Anchore Scan backup
 #   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
@@ -207,8 +207,8 @@ steps:
 services:
   - name: docker
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
-  - name: anchore-submission-server
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
-    pull: always
-    commands:
-      - /run.sh server
+  # - name: anchore-submission-server
+  #   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+  #   pull: always
+  #   commands:
+  #     - /run.sh server
