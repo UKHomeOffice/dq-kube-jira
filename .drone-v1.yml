@@ -8,110 +8,110 @@ platform:
   arch: amd64
 
 steps:
-- name: build_jira
-  pull: if-not-exists
-  image: plugins/docker
-  settings:
-    build_args:
-    - JIRA_VERSION=8.7.1
-    context: app/jira-docker
-    dockerfile: app/jira-docker/Dockerfile
-    force_tag: true
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/jira-docker
-    tags:
-    - ${DRONE_COMMIT_SHA}
-    - b${DRONE_BUILD_NUMBER}
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
-      from_secret: docker_username
-  when:
-    event:
-    - push
+# - name: build_jira
+#   pull: if-not-exists
+#   image: plugins/docker
+#   settings:
+#     build_args:
+#     - JIRA_VERSION=8.7.1
+#     context: app/jira-docker
+#     dockerfile: app/jira-docker/Dockerfile
+#     force_tag: true
+#     registry: quay.io
+#     repo: quay.io/ukhomeofficedigital/jira-docker
+#     tags:
+#     - ${DRONE_COMMIT_SHA}
+#     - b${DRONE_BUILD_NUMBER}
+#   environment:
+#     DOCKER_PASSWORD:
+#       from_secret: docker_password
+#     DOCKER_USERNAME:
+#       from_secret: docker_username
+#   when:
+#     event:
+#     - push
 
-- name: Anchore Scan Jira
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
-  pull: always
-  environment:
-    #NOTE: Image name can't be a variable here!
-    IMAGE_NAME: quay.io/ukhomeofficedigital/jira-docker:${DRONE_COMMIT_SHA}
-    LOCAL_IMAGE: false
-    SHOW_ALL_VULNERABILITIES: true
-    TOLERATE: medium
-    FAIL_ON_DETECTION: false
-  when:
-    event:
-      - push
-
-- name: build_jira_backup
-  pull: if-not-exists
-  image: plugins/docker
-  settings:
-    context: app/jira-s3-backup
-    dockerfile: app/jira-s3-backup/Dockerfile
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
-    tags:
-    - ${DRONE_COMMIT_SHA}
-    - b${DRONE_BUILD_NUMBER}
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
-      from_secret: docker_username
-  when:
-    event:
-    - push
-
-- name: Anchore Scan backup
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
-  pull: always
-  environment:
-    #NOTE: Image name can't be a variable here!
-    IMAGE_NAME: quay.io/ukhomeofficedigital/dq-jira-s3-backup:${DRONE_COMMIT_SHA}
-    LOCAL_IMAGE: false
-    SHOW_ALL_VULNERABILITIES: true
-    TOLERATE: medium
-    FAIL_ON_DETECTION: false
-  when:
-    event:
-      - push
-
-- name: build_access_log
-  pull: if-not-exists
-  image: plugins/docker
-  settings:
-    context: app/jira-logger
-    dockerfile: app/jira-logger/Dockerfile
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-logger
-    tags:
-    - ${DRONE_COMMIT_SHA}
-    - b${DRONE_BUILD_NUMBER}
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
-      from_secret: docker_username
-  when:
-    event:
-    - push
-
-- name: Anchore Scan access_log
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
-  pull: always
-  environment:
-    #NOTE: Image name can't be a variable here!
-    IMAGE_NAME: quay.io/ukhomeofficedigital/dq-logger:${DRONE_COMMIT_SHA}
-    LOCAL_IMAGE: false
-    SHOW_ALL_VULNERABILITIES: true
-    TOLERATE: medium
-    FAIL_ON_DETECTION: false
-  when:
-    event:
-      - push
+# - name: Anchore Scan Jira
+#   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+#   pull: always
+#   environment:
+#     #NOTE: Image name can't be a variable here!
+#     IMAGE_NAME: quay.io/ukhomeofficedigital/jira-docker:${DRONE_COMMIT_SHA}
+#     LOCAL_IMAGE: false
+#     SHOW_ALL_VULNERABILITIES: true
+#     TOLERATE: medium
+#     FAIL_ON_DETECTION: false
+#   when:
+#     event:
+#       - push
+#
+# - name: build_jira_backup
+#   pull: if-not-exists
+#   image: plugins/docker
+#   settings:
+#     context: app/jira-s3-backup
+#     dockerfile: app/jira-s3-backup/Dockerfile
+#     registry: quay.io
+#     repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
+#     tags:
+#     - ${DRONE_COMMIT_SHA}
+#     - b${DRONE_BUILD_NUMBER}
+#   environment:
+#     DOCKER_PASSWORD:
+#       from_secret: docker_password
+#     DOCKER_USERNAME:
+#       from_secret: docker_username
+#   when:
+#     event:
+#     - push
+#
+# - name: Anchore Scan backup
+#   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+#   pull: always
+#   environment:
+#     #NOTE: Image name can't be a variable here!
+#     IMAGE_NAME: quay.io/ukhomeofficedigital/dq-jira-s3-backup:${DRONE_COMMIT_SHA}
+#     LOCAL_IMAGE: false
+#     SHOW_ALL_VULNERABILITIES: true
+#     TOLERATE: medium
+#     FAIL_ON_DETECTION: false
+#   when:
+#     event:
+#       - push
+#
+# - name: build_access_log
+#   pull: if-not-exists
+#   image: plugins/docker
+#   settings:
+#     context: app/jira-logger
+#     dockerfile: app/jira-logger/Dockerfile
+#     registry: quay.io
+#     repo: quay.io/ukhomeofficedigital/dq-logger
+#     tags:
+#     - ${DRONE_COMMIT_SHA}
+#     - b${DRONE_BUILD_NUMBER}
+#   environment:
+#     DOCKER_PASSWORD:
+#       from_secret: docker_password
+#     DOCKER_USERNAME:
+#       from_secret: docker_username
+#   when:
+#     event:
+#     - push
+#
+# - name: Anchore Scan access_log
+#   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+#   pull: always
+#   environment:
+#     #NOTE: Image name can't be a variable here!
+#     IMAGE_NAME: quay.io/ukhomeofficedigital/dq-logger:${DRONE_COMMIT_SHA}
+#     LOCAL_IMAGE: false
+#     SHOW_ALL_VULNERABILITIES: true
+#     TOLERATE: medium
+#     FAIL_ON_DETECTION: false
+#   when:
+#     event:
+#       - push
 
 # - name: deploy_to_dev
 #   pull: if-not-exists
@@ -198,7 +198,7 @@ steps:
       from_secret: PROD_DB_USERNAME
   when:
     branch:
-    - master
+    - YEL-4006
     event:
     - promote
     target:
