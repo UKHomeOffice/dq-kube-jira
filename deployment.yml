@@ -93,62 +93,62 @@ spec:
           - name: https
             containerPort: 10443
 
-      - name: s3-backup
-        image: quay.io/ukhomeofficedigital/dq-jira-s3-backup:{{ .DRONE_COMMIT_SHA }}
-        imagePullPolicy: Always
-        securityContext:
-          runAsNonRoot: true
-        env:
-          - name: DATABASE_HOST
-            valueFrom:
-              secretKeyRef:
-                name: {{ .DATABASE_SECRET_NAME }}
-                key: endpoint
-          - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .DATABASE_SECRET_NAME }}
-                key: database_name
-          - name: PGPASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .DATABASE_SECRET_NAME }}
-                key: password
-          - name: DATABASE_PORT
-            valueFrom:
-              secretKeyRef:
-                name: {{ .DATABASE_SECRET_NAME }}
-                key: port
-          - name: DATABASE_SCHEMA_NAME
-            value: {{ .DATABASE_SCHEMA_NAME }}
-          - name: DATABASE_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .DATABASE_SECRET_NAME }}
-                key: username
-          - name: BUCKET_NAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .AWS_BUCKET_SECRET_NAME }}
-                key: bucket_name
-          - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: {{ .AWS_BUCKET_SECRET_NAME }}
-                key: access_key_id
-          - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ .AWS_BUCKET_SECRET_NAME }}
-                key: secret_access_key
-          - name: SLACK_WEBHOOK
-            valueFrom:
-              secretKeyRef:
-                name: {{ .AWS_BUCKET_SECRET_NAME }}
-                key: slack_webhook
-        volumeMounts:
-          - mountPath: /var/atlassian/jira
-            name: jira
+      # - name: s3-backup
+      #   image: quay.io/ukhomeofficedigital/dq-jira-s3-backup:{{ .DRONE_COMMIT_SHA }}
+      #   imagePullPolicy: Always
+      #   securityContext:
+      #     runAsNonRoot: true
+      #   env:
+      #     - name: DATABASE_HOST
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .DATABASE_SECRET_NAME }}
+      #           key: endpoint
+      #     - name: DATABASE_NAME
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .DATABASE_SECRET_NAME }}
+      #           key: database_name
+      #     - name: PGPASSWORD
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .DATABASE_SECRET_NAME }}
+      #           key: password
+      #     - name: DATABASE_PORT
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .DATABASE_SECRET_NAME }}
+      #           key: port
+      #     - name: DATABASE_SCHEMA_NAME
+      #       value: {{ .DATABASE_SCHEMA_NAME }}
+      #     - name: DATABASE_USERNAME
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .DATABASE_SECRET_NAME }}
+      #           key: username
+      #     - name: BUCKET_NAME
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .AWS_BUCKET_SECRET_NAME }}
+      #           key: bucket_name
+      #     - name: AWS_ACCESS_KEY_ID
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .AWS_BUCKET_SECRET_NAME }}
+      #           key: access_key_id
+      #     - name: AWS_SECRET_ACCESS_KEY
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .AWS_BUCKET_SECRET_NAME }}
+      #           key: secret_access_key
+      #     - name: SLACK_WEBHOOK
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: {{ .AWS_BUCKET_SECRET_NAME }}
+      #           key: slack_webhook
+      #   volumeMounts:
+      #     - mountPath: /var/atlassian/jira
+      #       name: jira
 
       # - name: access-log
       #   image: quay.io/ukhomeofficedigital/dq-logger:{{ .DRONE_COMMIT_SHA }}
