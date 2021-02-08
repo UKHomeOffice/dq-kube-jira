@@ -10,12 +10,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      name: jira
+      name: jira-pg96
   revisionHistoryLimit: 3
   template:
     metadata:
       labels:
-        name: jira
+        name: jira-pg96
     spec:
       securityContext:
         runAsUser: 1000
@@ -150,17 +150,17 @@ spec:
           - mountPath: /var/atlassian/jira-pg96
             name: jira
 
-      - name: access-log
-        image: quay.io/ukhomeofficedigital/dq-logger:{{ .DRONE_COMMIT_SHA }}
-        imagePullPolicy: Always
-        securityContext:
-          runAsNonRoot: true
-        env:
-          - name: ACCESS_LOG_PATH
-            value: '/var/atlassian/jira/log/atlassian-jira-http-access.log'
-        volumeMounts:
-          - mountPath: /var/atlassian/jira-pg96
-            name: jira
+      # - name: access-log
+      #   image: quay.io/ukhomeofficedigital/dq-logger:{{ .DRONE_COMMIT_SHA }}
+      #   imagePullPolicy: Always
+      #   securityContext:
+      #     runAsNonRoot: true
+      #   env:
+      #     - name: ACCESS_LOG_PATH
+      #       value: '/var/atlassian/jira/log/atlassian-jira-http-access.log'
+      #   volumeMounts:
+      #     - mountPath: /var/atlassian/jira-pg96
+      #       name: jira
 
       volumes:
         - name: jira
