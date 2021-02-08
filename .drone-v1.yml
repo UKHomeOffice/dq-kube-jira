@@ -164,7 +164,7 @@ steps:
   environment:
     AWS_BUCKET_SECRET_NAME: s3-dq-management-jira-backup
     DATABASE_SCHEMA_NAME: public
-    DATABASE_SECRET_NAME: dq-jira-rds-access_2
+    DATABASE_SECRET_NAME: dq-jira-rds-access-2
     # DATABASE_SECRET_NAME: dq-management-jira-rds-access
     ENV: prod
     HOSTNAME: jira.dq.homeoffice.gov.uk
