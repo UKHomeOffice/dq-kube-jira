@@ -169,7 +169,7 @@ steps:
     ENV: prod
     HOSTNAME: jira-pg96.dq.homeoffice.gov.uk
     INSECURE_SKIP_TLS_VERIFY: true
-    JIRA_HOME_VOLUME_SIZE: 25Gi
+    JIRA_HOME_VOLUME_SIZE: 40Gi
     JIRA_VERSION: 8.7.1
     KUBE_NAMESPACE: dq-management
     PROD_ACCESS_KEY_ID:
