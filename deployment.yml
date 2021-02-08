@@ -70,7 +70,7 @@ spec:
                 name: {{ .DATABASE_SECRET_NAME }}
                 key: username
         volumeMounts:
-          - mountPath: /var/atlassian/jira-pg96
+          - mountPath: /var/atlassian/jira
             name: jira
 
 
@@ -147,7 +147,7 @@ spec:
                 name: {{ .AWS_BUCKET_SECRET_NAME }}
                 key: slack_webhook
         volumeMounts:
-          - mountPath: /var/atlassian/jira-pg96
+          - mountPath: /var/atlassian/jira
             name: jira
 
       # - name: access-log
