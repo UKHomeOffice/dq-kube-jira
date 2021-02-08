@@ -109,7 +109,6 @@ main() {
   fi
 }
 
-
 ERROR_LOG=$(mktemp)
 trap 'rm -f "$ERROR_LOG"' EXIT
 main
