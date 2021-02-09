@@ -1,0 +1,202 @@
+---
+kind: pipeline
+name: dq-jira
+type: kubernetes
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: build_jira
+  pull: if-not-exists
+  image: plugins/docker
+  settings:
+    build_args:
+    - JIRA_VERSION=8.7.1
+    context: app/jira-docker
+    dockerfile: app/jira-docker/Dockerfile
+    force_tag: true
+    registry: quay.io
+    repo: quay.io/ukhomeofficedigital/jira-docker
+    tags:
+    - ${DRONE_COMMIT_SHA}
+    - b${DRONE_BUILD_NUMBER}
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    DOCKER_USERNAME:
+      from_secret: docker_username
+  when:
+    event:
+    - push
+
+- name: Anchore Scan Jira
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+  pull: always
+  environment:
+    #NOTE: Image name can't be a variable here!
+    IMAGE_NAME: quay.io/ukhomeofficedigital/jira-docker:${DRONE_COMMIT_SHA}
+    LOCAL_IMAGE: false
+    SHOW_ALL_VULNERABILITIES: true
+    TOLERATE: medium
+    FAIL_ON_DETECTION: false
+  when:
+    event:
+      - push
+
+- name: build_jira_backup
+  pull: if-not-exists
+  image: plugins/docker
+  settings:
+    context: app/jira-s3-backup
+    dockerfile: app/jira-s3-backup/Dockerfile
+    registry: quay.io
+    repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
+    tags:
+    - ${DRONE_COMMIT_SHA}
+    - b${DRONE_BUILD_NUMBER}
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    DOCKER_USERNAME:
+      from_secret: docker_username
+  when:
+    event:
+    - push
+
+- name: Anchore Scan backup
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+  pull: always
+  environment:
+    #NOTE: Image name can't be a variable here!
+    IMAGE_NAME: quay.io/ukhomeofficedigital/dq-jira-s3-backup:${DRONE_COMMIT_SHA}
+    LOCAL_IMAGE: false
+    SHOW_ALL_VULNERABILITIES: true
+    TOLERATE: medium
+    FAIL_ON_DETECTION: false
+  when:
+    event:
+      - push
+
+- name: build_access_log
+  pull: if-not-exists
+  image: plugins/docker
+  settings:
+    context: app/jira-logger
+    dockerfile: app/jira-logger/Dockerfile
+    registry: quay.io
+    repo: quay.io/ukhomeofficedigital/dq-logger
+    tags:
+    - ${DRONE_COMMIT_SHA}
+    - b${DRONE_BUILD_NUMBER}
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    DOCKER_USERNAME:
+      from_secret: docker_username
+  when:
+    event:
+    - push
+
+- name: Anchore Scan access_log
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+  pull: always
+  environment:
+    #NOTE: Image name can't be a variable here!
+    IMAGE_NAME: quay.io/ukhomeofficedigital/dq-logger:${DRONE_COMMIT_SHA}
+    LOCAL_IMAGE: false
+    SHOW_ALL_VULNERABILITIES: true
+    TOLERATE: medium
+    FAIL_ON_DETECTION: false
+  when:
+    event:
+      - push
+
+- name: deploy_to_dev
+  pull: if-not-exists
+  image: quay.io/ukhomeofficedigital/kd
+  commands:
+  - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
+  - export KUBE_SERVER=$$NOTPROD_KUBE_SERVER
+  - export BUCKET_NAME=$$NOTPROD_BUCKET_NAME
+  - export ACCESS_KEY_ID=$$NOTPROD_ACCESS_KEY_ID
+  - export SECRET_ACCESS_KEY=$$NOTPROD_SECRET_ACCESS_KEY
+  - export SLACK_WEBHOOK=$$NOTPROD_SLACK_WEBHOOK
+  - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
+  environment:
+    AWS_BUCKET_SECRET_NAME: s3-dq-notprod-management-jira-backup
+    DATABASE_SCHEMA_NAME: public
+    DATABASE_SECRET_NAME: dq-jira-notprod-rds-access
+    ENV: notprod
+    HOSTNAME: jira.notprod.dq.homeoffice.gov.uk
+    INSECURE_SKIP_TLS_VERIFY: true
+    JIRA_HOME_VOLUME_SIZE: 10Gi
+    JIRA_VERSION: 8.7.1
+    KUBE_NAMESPACE: dq-management-notprod
+    NOTPROD_ACCESS_KEY_ID:
+      from_secret: NOTPROD_ACCESS_KEY_ID
+    NOTPROD_BUCKET_NAME:
+      from_secret: NOTPROD_BUCKET_NAME
+    NOTPROD_KUBE_SERVER:
+      from_secret: NOTPROD_KUBE_SERVER
+    NOTPROD_KUBE_TOKEN:
+      from_secret: NOTPROD_KUBE_TOKEN
+    NOTPROD_SECRET_ACCESS_KEY:
+      from_secret: NOTPROD_SECRET_ACCESS_KEY
+    NOTPROD_SLACK_WEBHOOK:
+      from_secret: NOTPROD_SLACK_WEBHOOK
+  when:
+    event:
+    - push
+
+- name: deploy_to_prod
+  pull: if-not-exists
+  image: quay.io/ukhomeofficedigital/kd
+  commands:
+  - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
+  - export KUBE_SERVER=$$PROD_KUBE_SERVER
+  - export BUCKET_NAME=$$PROD_BUCKET_NAME
+  - export ACCESS_KEY_ID=$$PROD_ACCESS_KEY_ID
+  - export SECRET_ACCESS_KEY=$$PROD_SECRET_ACCESS_KEY
+  - export SLACK_WEBHOOK=$$PROD_SLACK_WEBHOOK
+  - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
+  environment:
+    AWS_BUCKET_SECRET_NAME: s3-dq-management-jira-backup
+    DATABASE_SCHEMA_NAME: public
+    # DATABASE_SECRET_NAME: dq-jira-rds-access-2
+    DATABASE_SECRET_NAME: dq-management-jira-rds-access
+    ENV: prod
+    HOSTNAME: jira-pg96.dq.homeoffice.gov.uk
+    INSECURE_SKIP_TLS_VERIFY: true
+    JIRA_HOME_VOLUME_SIZE: 25Gi
+    JIRA_VERSION: 8.7.1
+    KUBE_NAMESPACE: dq-management
+    PROD_ACCESS_KEY_ID:
+      from_secret: PROD_ACCESS_KEY_ID
+    PROD_BUCKET_NAME:
+      from_secret: PROD_BUCKET_NAME
+    PROD_KUBE_SERVER:
+      from_secret: PROD_KUBE_SERVER
+    PROD_KUBE_TOKEN:
+      from_secret: PROD_KUBE_TOKEN
+    PROD_SECRET_ACCESS_KEY:
+      from_secret: PROD_SECRET_ACCESS_KEY
+    PROD_SLACK_WEBHOOK:
+      from_secret: PROD_SLACK_WEBHOOK
+  when:
+    branch:
+    - master
+    event:
+    - promote
+    target:
+    - production
+
+services:
+  - name: docker
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+  - name: anchore-submission-server
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+    pull: always
+    commands:
+      - /run.sh server
