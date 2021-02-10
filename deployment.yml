@@ -73,7 +73,6 @@ spec:
           - mountPath: /var/atlassian/jira
             name: jira
 
-
       - name: proxy
         image: quay.io/ukhomeofficedigital/dq-nginx-proxy-redirect:b58
         securityContext:
