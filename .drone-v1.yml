@@ -161,7 +161,7 @@ steps:
   - export ACCESS_KEY_ID=$$PROD_ACCESS_KEY_ID
   - export SECRET_ACCESS_KEY=$$PROD_SECRET_ACCESS_KEY
   - export SLACK_WEBHOOK=$$PROD_SLACK_WEBHOOK
-  - kd --delete deployment.yml
+  - kd --delete -f deployment.yml
   - kd -f network-policy.yml -f pvc.yml -f service.yml -f ingress.yml -f secrets.yml -f deployment.yml
   environment:
     AWS_BUCKET_SECRET_NAME: s3-dq-management-jira-backup
