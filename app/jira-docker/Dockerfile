@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM openjdk:8-alpine
 
 LABEL maintainer="dqdevops@homeoffice.gsi.gov.uk"
 
