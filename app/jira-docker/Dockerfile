@@ -8,6 +8,8 @@ ENV JIRA_HOME     /var/atlassian/jira
 ENV JIRA_INSTALL  /opt/atlassian/jira
 ENV USERMAP_UID 1000
 
+RUN apk update && apk upgrade
+
 RUN set -x \
     && apk del openjdk8 \
     && apk update --quiet \
@@ -49,8 +51,6 @@ RUN mkdir -p                   "/home/jira/templates" \
     && cp -r "${JIRA_INSTALL}/conf" "${JIRA_INSTALL}/original_conf" \
     && chmod -R 700            "${JIRA_INSTALL}/original_conf" \
     && chown -R jira:jira      "${JIRA_INSTALL}/original_conf"
-
-RUN apk update curl
 
 # add a runtime arg to extend the timeout for plugin installs
 RUN sed -i 's/^JVM_SUPPORT_RECOMMENDED_ARGS=""/JVM_SUPPORT_RECOMMENDED_ARGS="-Datlassian.plugins.enable.wait=300"/' ${JIRA_INSTALL}/bin/setenv.sh
