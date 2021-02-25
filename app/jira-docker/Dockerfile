@@ -9,18 +9,19 @@ ENV JIRA_INSTALL  /opt/atlassian/jira
 ENV USERMAP_UID 1000
 
 RUN set -x \
+    && apk del openjdk8 \
     && apk update --quiet \
     && apk upgrade --quiet \
-    && apk add --upgrade --no-cache --quiet openjdk8 xmlstarlet apk-tools bash \
-    && apk add --upgrade --no-cache curl \
+    && apk add --no-cache --quiet openjdk8 xmlstarlet apk-tools curl bash \
+    && apk update curl \
     && adduser --disabled-password --gecos "" --uid ${USERMAP_UID} jira \
     && chown jira:jira -R /var \
     && chown jira:jira -R /opt
 
 # Add aws-cli tools
-RUN apk add --upgrade py-pip \
+RUN apk add py-pip \
     && pip install --upgrade pip \
-    && pip install --upgrade awscli
+    && pip install awscli
 
 # Install Atlassian JIRA and helper tools
 RUN mkdir -p ${JIRA_INSTALL}
