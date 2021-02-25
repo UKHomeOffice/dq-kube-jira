@@ -17,8 +17,8 @@ RUN set -x \
     && chown jira:jira -R /opt
 
 # Add aws-cli tools
-RUN apk add py-pip \
-    && pip install --upgrade pip \
+RUN apk add --upgrade py-pip \
+    && pip install pip \
     && pip install awscli
 
 # Install Atlassian JIRA and helper tools
