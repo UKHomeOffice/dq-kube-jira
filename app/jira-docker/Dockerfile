@@ -13,7 +13,6 @@ RUN set -x \
     && apk update --quiet \
     && apk upgrade --quiet \
     && apk add --no-cache --quiet openjdk8 xmlstarlet apk-tools curl bash \
-    && apk update curl \
     && adduser --disabled-password --gecos "" --uid ${USERMAP_UID} jira \
     && chown jira:jira -R /var \
     && chown jira:jira -R /opt
@@ -50,6 +49,8 @@ RUN mkdir -p                   "/home/jira/templates" \
     && cp -r "${JIRA_INSTALL}/conf" "${JIRA_INSTALL}/original_conf" \
     && chmod -R 700            "${JIRA_INSTALL}/original_conf" \
     && chown -R jira:jira      "${JIRA_INSTALL}/original_conf"
+
+RUN apk update curl
 
 # add a runtime arg to extend the timeout for plugin installs
 RUN sed -i 's/^JVM_SUPPORT_RECOMMENDED_ARGS=""/JVM_SUPPORT_RECOMMENDED_ARGS="-Datlassian.plugins.enable.wait=300"/' ${JIRA_INSTALL}/bin/setenv.sh
