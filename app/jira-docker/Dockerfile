@@ -12,8 +12,7 @@ RUN set -x \
     && apk update --quiet \
     && apk upgrade --quiet \
     && apk add --upgrade --no-cache --quiet openjdk8 xmlstarlet apk-tools bash \
-    && apk add --no-cache curl=7.66.0 \
-    && apk add --no-cache libcurl=7.66.0 \
+    && apk add --upgrade --no-cache curl \
     && adduser --disabled-password --gecos "" --uid ${USERMAP_UID} jira \
     && chown jira:jira -R /var \
     && chown jira:jira -R /opt
