@@ -11,7 +11,7 @@ ENV USERMAP_UID 1000
 RUN set -x \
     && apk update --quiet \
     && apk upgrade --quiet \
-    && apk add --upgrade --no-cache --quiet openjdk8 xmlstarlet apk-tools curl bash \
+    && apk add --upgrade --no-cache --quiet openjdk8 xmlstarlet apk-tools bash \
     && apk add --no-cache curl=7.66.0 \
     && apk add --no-cache libcurl=7.66.0 \
     && adduser --disabled-password --gecos "" --uid ${USERMAP_UID} jira \
