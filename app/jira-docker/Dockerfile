@@ -1,4 +1,4 @@
-FROM openjdk:14-ea-8-alpine3.10
+FROM openjdk:14-ea-8-alpine
 
 LABEL maintainer="dqdevops@homeoffice.gsi.gov.uk"
 
