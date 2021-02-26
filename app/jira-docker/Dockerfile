@@ -1,4 +1,4 @@
-FROM openjdk:14-ea-8-alpine
+FROM openjdk:11.0.10-jdk
 
 LABEL maintainer="dqdevops@homeoffice.gsi.gov.uk"
 
@@ -9,17 +9,17 @@ ENV JIRA_INSTALL  /opt/atlassian/jira
 ENV USERMAP_UID 1000
 
 RUN set -x \
-    && apk update --quiet \
-    && apk upgrade --quiet \
-    && apk add --no-cache --quiet openjdk8 xmlstarlet apk-tools curl bash \
+    && apt-get -y update --quiet \
+    && apt-get -y upgrade --quiet \
+    && apt-get -y install --quiet openjdk-11-jdk xmlstarlet curl bash \
     && adduser --disabled-password --gecos "" --uid ${USERMAP_UID} jira \
     && chown jira:jira -R /var \
     && chown jira:jira -R /opt
 
 # Add aws-cli tools
-RUN apk add py-pip \
-    && pip install --upgrade pip \
-    && pip install awscli
+RUN apt-get install -y python3-pip \
+    && pip3 install --upgrade pip \
+    && pip3 install awscli
 
 # Install Atlassian JIRA and helper tools
 RUN mkdir -p ${JIRA_INSTALL}
