@@ -52,6 +52,8 @@ RUN mkdir -p                   "/home/jira/templates" \
     && chmod -R 700            "${JIRA_INSTALL}/original_conf" \
     && chown -R jira:jira      "${JIRA_INSTALL}/original_conf"
 
+RUN apk update && apk upgrade
+
 # add a runtime arg to extend the timeout for plugin installs
 RUN sed -i 's/^JVM_SUPPORT_RECOMMENDED_ARGS=""/JVM_SUPPORT_RECOMMENDED_ARGS="-Datlassian.plugins.enable.wait=300"/' ${JIRA_INSTALL}/bin/setenv.sh
 
