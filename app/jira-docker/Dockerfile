@@ -9,7 +9,6 @@ ENV JIRA_INSTALL  /opt/atlassian/jira
 ENV USERMAP_UID 1000
 
 RUN set -x \
-    && apk del openjdk8 \
     && apk update --quiet \
     && apk upgrade --quiet \
     && apk add --no-cache --quiet openjdk8 xmlstarlet apk-tools curl bash \
