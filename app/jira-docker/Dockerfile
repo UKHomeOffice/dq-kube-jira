@@ -1,4 +1,4 @@
-FROM openjdk:11.0.10-jdk
+FROM alpine:3.13.2
 
 LABEL maintainer="dqdevops@homeoffice.gsi.gov.uk"
 
@@ -8,18 +8,21 @@ ENV JIRA_HOME     /var/atlassian/jira
 ENV JIRA_INSTALL  /opt/atlassian/jira
 ENV USERMAP_UID 1000
 
+RUN apk update
+
 RUN set -x \
-    && apt-get -y update --quiet \
-    && apt-get -y upgrade --quiet \
-    && apt-get -y install --quiet openjdk-11-jdk xmlstarlet curl bash \
+    && apk add openjd8 \
+    && apk update --quiet \
+    && apk upgrade --quiet \
+    && apk add --no-cache --quiet openjdk8 xmlstarlet apk-tools curl bash \
     && adduser --disabled-password --gecos "" --uid ${USERMAP_UID} jira \
     && chown jira:jira -R /var \
     && chown jira:jira -R /opt
 
 # Add aws-cli tools
-RUN apt-get install -y python3-pip \
-    && pip3 install --upgrade pip \
-    && pip3 install awscli
+RUN apk add py-pip \
+    && pip install --upgrade pip \
+    && pip install awscli
 
 # Install Atlassian JIRA and helper tools
 RUN mkdir -p ${JIRA_INSTALL}
@@ -48,9 +51,6 @@ RUN mkdir -p                   "/home/jira/templates" \
     && cp -r "${JIRA_INSTALL}/conf" "${JIRA_INSTALL}/original_conf" \
     && chmod -R 700            "${JIRA_INSTALL}/original_conf" \
     && chown -R jira:jira      "${JIRA_INSTALL}/original_conf"
-
-
-RUN apt-get clean && apt-get autoremove
 
 # add a runtime arg to extend the timeout for plugin installs
 RUN sed -i 's/^JVM_SUPPORT_RECOMMENDED_ARGS=""/JVM_SUPPORT_RECOMMENDED_ARGS="-Datlassian.plugins.enable.wait=300"/' ${JIRA_INSTALL}/bin/setenv.sh
