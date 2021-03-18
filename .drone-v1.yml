@@ -35,7 +35,7 @@ steps:
   pull: if-not-exists
   image: aquasec/trivy
   commands:
-  - trivy --exit-code 1 --no-progress quay.io/ukhomeofficedigital/jira-docker:${DRONE_COMMIT_SHA}
+  - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/jira-docker:${DRONE_COMMIT_SHA}
   when:
     branch:
       exclude:
@@ -67,7 +67,7 @@ steps:
   pull: if-not-exists
   image: aquasec/trivy
   commands:
-  - trivy --exit-code 1 --no-progress quay.io/ukhomeofficedigital/dq-jira-s3-backup:${DRONE_COMMIT_SHA}
+  - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/dq-jira-s3-backup:${DRONE_COMMIT_SHA}
   when:
     branch:
       exclude:
@@ -99,7 +99,7 @@ steps:
   pull: if-not-exists
   image: aquasec/trivy
   commands:
-  - trivy --exit-code 1 --no-progress quay.io/ukhomeofficedigital/dq-logger:${DRONE_COMMIT_SHA}
+  - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/dq-logger:${DRONE_COMMIT_SHA}
   when:
     branch:
       exclude:
