@@ -3,9 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jira
-  annotations:
-    environment: {{ .ENV }}
-    {{ if eq .ENV "notprod" }}downscaler/uptime: Mon-Fri 07:00-18:30 Europe/London{{ end }}
+  # annotations:
+  #   environment: {{ .ENV }}
+  #   {{ if eq .ENV "notprod" }}downscaler/uptime: Mon-Fri 07:00-18:30 Europe/London{{ end }}
 spec:
   replicas: 1
   selector:
