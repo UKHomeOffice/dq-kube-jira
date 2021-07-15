@@ -8,6 +8,8 @@ ENV JIRA_HOME     /var/atlassian/jira
 ENV JIRA_INSTALL  /opt/atlassian/jira
 ENV USERMAP_UID 1000
 
+RUN apk update && apk upgrade
+
 RUN set -x \
     && apk update --quiet \
     && apk upgrade --quiet \
