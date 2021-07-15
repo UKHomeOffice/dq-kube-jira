@@ -1,4 +1,4 @@
-FROM alpine:3.13.2
+FROM alpine:3.13.5
 
 LABEL maintainer="dqdevops@homeoffice.gsi.gov.uk"
 
@@ -7,8 +7,6 @@ ARG JIRA_VERSION=${JIRA_VERSION}
 ENV JIRA_HOME     /var/atlassian/jira
 ENV JIRA_INSTALL  /opt/atlassian/jira
 ENV USERMAP_UID 1000
-
-RUN apk update && apk upgrade
 
 RUN set -x \
     && apk update --quiet \
