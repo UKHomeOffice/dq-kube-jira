@@ -8,104 +8,104 @@ platform:
   arch: amd64
 
 steps:
-- name: build_jira
-  pull: if-not-exists
-  image: plugins/docker
-  settings:
-    build_args:
-    - JIRA_VERSION=8.7.1
-    context: app/jira-docker
-    dockerfile: app/jira-docker/Dockerfile
-    force_tag: true
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/jira-docker
-    tags:
-    - ${DRONE_COMMIT_SHA}
-    - b${DRONE_BUILD_NUMBER}
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
-      from_secret: docker_username
-  when:
-    event:
-    - push
+# - name: build_jira
+#   pull: if-not-exists
+#   image: plugins/docker
+#   settings:
+#     build_args:
+#     - JIRA_VERSION=8.7.1
+#     context: app/jira-docker
+#     dockerfile: app/jira-docker/Dockerfile
+#     force_tag: true
+#     registry: quay.io
+#     repo: quay.io/ukhomeofficedigital/jira-docker
+#     tags:
+#     - ${DRONE_COMMIT_SHA}
+#     - b${DRONE_BUILD_NUMBER}
+#   environment:
+#     DOCKER_PASSWORD:
+#       from_secret: docker_password
+#     DOCKER_USERNAME:
+#       from_secret: docker_username
+#   when:
+#     event:
+#     - push
+#
+# - name: trivy_scan_jira-docker
+#   pull: if-not-exists
+#   image: aquasec/trivy
+#   commands:
+#   - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/jira-docker:${DRONE_COMMIT_SHA}
+#   when:
+#     branch:
+#       exclude:
+#       - master
+#     event:
+#     - push
+#
+# - name: build_jira_backup
+#   pull: if-not-exists
+#   image: plugins/docker
+#   settings:
+#     context: app/jira-s3-backup
+#     dockerfile: app/jira-s3-backup/Dockerfile
+#     registry: quay.io
+#     repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
+#     tags:
+#     - ${DRONE_COMMIT_SHA}
+#     - b${DRONE_BUILD_NUMBER}
+#   environment:
+#     DOCKER_PASSWORD:
+#       from_secret: docker_password
+#     DOCKER_USERNAME:
+#       from_secret: docker_username
+#   when:
+#     event:
+#     - push
+#
+# - name: trivy_scan_jira_backup
+#   pull: if-not-exists
+#   image: aquasec/trivy
+#   commands:
+#   - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/dq-jira-s3-backup:${DRONE_COMMIT_SHA}
+#   when:
+#     branch:
+#       exclude:
+#       - master
+#     event:
+#     - push
 
-- name: trivy_scan_jira-docker
-  pull: if-not-exists
-  image: aquasec/trivy
-  commands:
-  - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/jira-docker:${DRONE_COMMIT_SHA}
-  when:
-    branch:
-      exclude:
-      - master
-    event:
-    - push
-
-- name: build_jira_backup
-  pull: if-not-exists
-  image: plugins/docker
-  settings:
-    context: app/jira-s3-backup
-    dockerfile: app/jira-s3-backup/Dockerfile
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-jira-s3-backup
-    tags:
-    - ${DRONE_COMMIT_SHA}
-    - b${DRONE_BUILD_NUMBER}
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
-      from_secret: docker_username
-  when:
-    event:
-    - push
-
-- name: trivy_scan_jira_backup
-  pull: if-not-exists
-  image: aquasec/trivy
-  commands:
-  - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/dq-jira-s3-backup:${DRONE_COMMIT_SHA}
-  when:
-    branch:
-      exclude:
-      - master
-    event:
-    - push
-
-- name: build_access_log
-  pull: if-not-exists
-  image: plugins/docker
-  settings:
-    context: app/jira-logger
-    dockerfile: app/jira-logger/Dockerfile
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-logger
-    tags:
-    - ${DRONE_COMMIT_SHA}
-    - b${DRONE_BUILD_NUMBER}
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
-      from_secret: docker_username
-  when:
-    event:
-    - push
-
-- name: trivy_scan_logger
-  pull: if-not-exists
-  image: aquasec/trivy
-  commands:
-  - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/dq-logger:${DRONE_COMMIT_SHA}
-  when:
-    branch:
-      exclude:
-      - master
-    event:
-    - push
+# - name: build_access_log
+#   pull: if-not-exists
+#   image: plugins/docker
+#   settings:
+#     context: app/jira-logger
+#     dockerfile: app/jira-logger/Dockerfile
+#     registry: quay.io
+#     repo: quay.io/ukhomeofficedigital/dq-logger
+#     tags:
+#     - ${DRONE_COMMIT_SHA}
+#     - b${DRONE_BUILD_NUMBER}
+#   environment:
+#     DOCKER_PASSWORD:
+#       from_secret: docker_password
+#     DOCKER_USERNAME:
+#       from_secret: docker_username
+#   when:
+#     event:
+#     - push
+#
+# - name: trivy_scan_logger
+#   pull: if-not-exists
+#   image: aquasec/trivy
+#   commands:
+#   - trivy --ignore-unfixed --exit-code 1 --no-progress quay.io/ukhomeofficedigital/dq-logger:${DRONE_COMMIT_SHA}
+#   when:
+#     branch:
+#       exclude:
+#       - master
+#     event:
+#     - push
 
 
 
