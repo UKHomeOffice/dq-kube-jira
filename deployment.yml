@@ -74,7 +74,7 @@ spec:
             name: jira
 
       - name: proxy
-        image: quay.io/ukhomeofficedigital/dq-nginx-proxy-redirect:b87
+        image: quay.io/ukhomeofficedigital/dq-nginx-proxy-redirect:b224
         securityContext:
           runAsNonRoot: true
         env:
